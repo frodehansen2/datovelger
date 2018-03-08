@@ -1,7 +1,8 @@
 {
-	"name": "my-app",
+	"name": "datovelger",
 	"version": "0.1.0",
 	"private": true,
+	"homepage": "https://frodehansen2.github.io/datovelger",
 	"dependencies": {
 		"@types/react": "^16.0.40",
 		"chokidar": "^2.0.2",
@@ -23,7 +24,9 @@
 		"eject": "react-scripts-ts eject",
 		"build-css": "node-less-chokidar src/styles/index.less -o src/",
 		"watch-css": "chokidar \"src/**/*.less\" -c \"node-less-chokidar ./src/styles/index.less\"",
-		"watch-css-old": "npm run build-css && node-less-chokidar src/ -o src/ --watch --recursive"
+		"watch-css-old": "npm run build-css && node-less-chokidar src/ -o src/ --watch --recursive",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d build"
 	},
 	"resolutions": {
 		"@types/react": "^16.0.40"
@@ -34,6 +37,7 @@
 		"@types/react-dates": "^16.0.5",
 		"@types/react-dom": "^15.5.7",
 		"classnames": "^2.2.5",
+		"gh-pages": "^1.1.0",
 		"nav-frontend-chevron-style": "^0.3.4",
 		"nav-frontend-knapper-style": "^0.3.6",
 		"nav-frontend-skjema-style": "^0.3.14",
