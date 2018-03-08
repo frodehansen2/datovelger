@@ -1,22 +1,17 @@
 import * as React from 'react';
+import Datovelger from './components/datovelger/Datovelger';
+
 import './App.css';
 
-const logo = require('./logo.svg');
-
 class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div className="App">
+				<h1>Testside for test av Airbnb sin datovelger</h1>
+				<Datovelger />
+			</div>
+		);
+	}
 }
 
 export default App;
