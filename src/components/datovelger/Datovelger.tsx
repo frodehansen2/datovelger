@@ -25,10 +25,14 @@ export interface Props {
 	/** Avgrensninger på hvilke datoer som er gyldig og ikke */
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Funksjon som kalles når gyldig dato velges */
-	onChange: (date: Date) => void;
+	onChange: (date: Date, inputValue?: string) => void;
+	/** Om tastaturinfo skal vises. Default true */
+	skjulTastaturinfo?: boolean;
 	/** react-dates props */
 	reactDatesProps?: SingleDatePickerShape | any;
 }
+
+const TRANSITION_DURATION = 50;
 
 interface State {
 	focused: boolean;
@@ -43,7 +47,7 @@ const defaultProps: SingleDatePickerShape = {
 	focused: false,
 	numberOfMonths: 1,
 	firstDayOfWeek: 1,
-	hideKeyboardShortcutsPanel: true
+	hideKeyboardShortcutsPanel: false
 };
 
 const mapProps = (props: Props) => {
@@ -67,13 +71,18 @@ const mapProps = (props: Props) => {
 };
 
 class Datovelger extends React.Component<Props, State> {
+	divContainer: HTMLDivElement | null;
+
 	constructor(props: Props) {
 		super(props);
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onFocusChange = this.onFocusChange.bind(this);
+		this.getInputValue = this.getInputValue.bind(this);
+		this.getDato = this.getDato.bind(this);
+		this.onComponentBlur = this.onComponentBlur.bind(this);
 		this.state = {
 			focused: false,
-			dato: props.dato ? moment(props.dato) : null
+			dato: props.dato ? moment(normaliserDato(props.dato)) : null
 		};
 	}
 
@@ -84,16 +93,34 @@ class Datovelger extends React.Component<Props, State> {
 			});
 		} else if (moment.isMoment(moment(nextProps.dato))) {
 			this.setState({
-				dato: moment(nextProps.dato)
+				dato: moment(normaliserDato(nextProps.dato))
 			});
 		}
 	}
 
+	getDato(): Date | null {
+		if (
+			this.state.dato === null ||
+			this.state.dato === undefined ||
+			!moment.isMoment(this.state.dato)
+		) {
+			return null;
+		}
+		return moment(this.state.dato).toDate();
+	}
+
+	getInputValue() {
+		const el = document.getElementById(this.props.id) as HTMLInputElement;
+		if (el && el.value) {
+			return el.value;
+		}
+		return undefined;
+	}
+
 	onDateChange(date: Moment | null) {
 		this.setState({ dato: date });
-		console.log('datovelger: ', date);
 		if (moment.isMoment(date)) {
-			this.props.onChange(date.toDate());
+			this.props.onChange(date.toDate(), this.getInputValue());
 		}
 	}
 
@@ -103,30 +130,44 @@ class Datovelger extends React.Component<Props, State> {
 		});
 	}
 
-	render() {
-		let dato = this.state.dato
-			? normaliserDato(this.state.dato.toDate())
-			: null;
+	onComponentBlur(e: React.FocusEvent<HTMLDivElement>) {
+		const el = this.divContainer;
+		if (el) {
+			setTimeout(() => {
+				if (!el.contains(document.activeElement)) {
+					this.setState({ focused: false });
+				}
+			}, TRANSITION_DURATION + 5);
+		}
+	}
 
+	render() {
 		const mappedProps: SingleDatePickerShape = {
 			id: this.props.id,
-			date: dato,
+			date: this.state.dato,
 			focused: this.state.focused,
 			onDateChange: this.onDateChange,
 			onFocusChange: this.onFocusChange,
+			keepOpenOnDateSelect: false,
+			placeholder: 'dd.mm.åååå',
+			transitionDuration: TRANSITION_DURATION,
+			navNext: <Chevron type="høyre" />,
+			navPrev: <Chevron type="venstre" />,
+			phrases: fraserBokmal as any,
+			hideKeyboardShortcutsPanel: this.props.skjulTastaturinfo,
 			...mapProps(this.props)
 		};
 
 		return (
-			<div className="nav-datovelger">
+			<div
+				className="nav-datovelger"
+				onBlur={this.onComponentBlur}
+				ref={(c) => (this.divContainer = c)}
+			>
 				<SingleDatePicker
-					firstDayOfWeek={1}
 					{...defaultProps}
 					{...mappedProps}
 					{...this.props.reactDatesProps}
-					phrases={fraserBokmal}
-					navNext={<Chevron type="høyre" />}
-					navPrev={<Chevron type="venstre" />}
 				/>
 			</div>
 		);

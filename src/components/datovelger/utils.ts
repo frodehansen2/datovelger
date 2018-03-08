@@ -1,34 +1,22 @@
-import { DatovelgerTidsperiode, DatovelgerAvgrensninger } from './types';
+import { DatovelgerAvgrensninger } from './types';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 
 export const normaliserDato = (d: Date): Moment => moment(d).startOf('day');
 
-export const erDatoGyldig = (
-	dato: Date,
-	options: {
-		helgerTillatt: boolean;
-		ugyldigePerioder: DatovelgerTidsperiode[];
-		minDato: Date;
-		maksDato: Date;
-	}
-): boolean => {
-	return true;
-};
-
 export const erDatoTilgjengelig = (
 	d: Moment,
-	avgensninger: DatovelgerAvgrensninger
+	angrensinger: DatovelgerAvgrensninger
 ): boolean => {
 	d = normaliserDato(d.toDate()) as Moment;
 	let blocked = false;
 
-	if (avgensninger.helgedagerIkkeTillatt) {
+	if (angrensinger.helgedagerIkkeTillatt) {
 		blocked = d.isoWeekday() === 6 || d.isoWeekday() === 7;
 	}
 
-	if (!blocked && avgensninger.ugyldigeTidsperioder) {
-		avgensninger.ugyldigeTidsperioder.forEach((p) => {
+	if (!blocked && angrensinger.ugyldigeTidsperioder) {
+		angrensinger.ugyldigeTidsperioder.forEach((p) => {
 			if (
 				!blocked &&
 				(d.isSameOrAfter(normaliserDato(p.startdato)) &&

@@ -1388,6 +1388,26 @@ body .blokk-xl {
 .DayPicker_weekHeader_li:after {
   content: '.';
 }
+.DayPickerKeyboardShortcuts_showSpan__bottomRight {
+  transition: all 0.1s ease;
+}
+.DayPickerKeyboardShortcuts_show__bottomRight {
+  border-right-color: #0067C5;
+  transition: all 0.1s ease;
+}
+.DayPickerKeyboardShortcuts_show__bottomRight:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #FFBD66;
+  border-radius: 3px;
+  border-radius: 5px;
+}
+.DayPickerKeyboardShortcuts_show__bottomRight:focus .DayPickerKeyboardShortcuts_showSpan__bottomRight {
+  bottom: 5px;
+  right: -21px;
+}
+.DayPickerKeyboardShortcuts_show__bottomRight:hover {
+  border-right-color: #FFBD66;
+}
 .CalendarMonth_caption {
   font-family: 'Source Sans Pro', Arial, sans-serif;
   font-size: 1.25rem;

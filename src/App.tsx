@@ -15,9 +15,10 @@ class App extends React.Component<Props, State> {
 		super(props);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.oppdaterDato = this.oppdaterDato.bind(this);
+		this.onClose = this.onClose.bind(this);
 		this.addDay = this.addDay.bind(this);
 		this.state = {
-			dato: new Date()
+			dato: null
 		};
 	}
 
@@ -27,9 +28,13 @@ class App extends React.Component<Props, State> {
 		alert('Valgt dato er: ' + this.state.dato);
 	}
 
-	oppdaterDato(dato: Date | null) {
-		console.log('oppdaterer', dato);
+	oppdaterDato(dato: Date | null, inputValue: string) {
+		console.log('App.oppdaterDato', dato, inputValue);
 		this.setState({ dato });
+	}
+
+	onClose(dato: Date, inputValue: string) {
+		console.log('App.onBlur', dato, `[${inputValue}]`);
 	}
 
 	addDay(days: number) {
