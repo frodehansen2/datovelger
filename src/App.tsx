@@ -49,7 +49,7 @@ class App extends React.Component<Props, State> {
 		return (
 			<div className="App">
 				<div className="App__content">
-					<h1>Testside for test av Airbnb sin datovelger</h1>
+					<h1>Test av Airbnb react-dates</h1>
 					<form action="#" onSubmit={this.handleSubmit}>
 						<div className="datovelger">
 							<Datovelger
