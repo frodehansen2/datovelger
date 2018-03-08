@@ -2,8 +2,10 @@ import * as React from 'react';
 import { SingleDatePicker, SingleDatePickerShape } from 'react-dates';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import Chevron from 'nav-frontend-chevron';
 
 import '../../../node_modules/react-dates/lib/css/_datepicker.css';
+
 import { DatovelgerAvgrensninger } from './types';
 import {
 	erDatoTilgjengelig,
@@ -11,11 +13,15 @@ import {
 	erDatoInnenforTidsperiode
 } from './utils';
 
+import fraserBokmal from './phrases_nb_NO';
+
+import './datovelger.less';
+
 export interface Props {
 	/** identifikator */
 	id: string;
 	/** Valgt dato */
-	dato?: Date;
+	dato: Date | null;
 	/** Avgrensninger på hvilke datoer som er gyldig og ikke */
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Funksjon som kalles når gyldig dato velges */
@@ -26,6 +32,7 @@ export interface Props {
 
 interface State {
 	focused: boolean;
+	dato: Moment | null;
 }
 
 const defaultProps: SingleDatePickerShape = {
@@ -65,12 +72,29 @@ class Datovelger extends React.Component<Props, State> {
 		this.onDateChange = this.onDateChange.bind(this);
 		this.onFocusChange = this.onFocusChange.bind(this);
 		this.state = {
-			focused: true
+			focused: false,
+			dato: props.dato ? moment(props.dato) : null
 		};
 	}
 
-	onDateChange(date: moment.Moment) {
-		this.props.onChange(date.toDate());
+	componentWillReceiveProps(nextProps: Props) {
+		if (!nextProps.dato) {
+			this.setState({
+				dato: null
+			});
+		} else if (moment.isMoment(moment(nextProps.dato))) {
+			this.setState({
+				dato: moment(nextProps.dato)
+			});
+		}
+	}
+
+	onDateChange(date: Moment | null) {
+		this.setState({ dato: date });
+		console.log('datovelger: ', date);
+		if (moment.isMoment(date)) {
+			this.props.onChange(date.toDate());
+		}
 	}
 
 	onFocusChange({ focused }: any) {
@@ -80,7 +104,9 @@ class Datovelger extends React.Component<Props, State> {
 	}
 
 	render() {
-		const dato = normaliserDato(this.props.dato || moment().toDate());
+		let dato = this.state.dato
+			? normaliserDato(this.state.dato.toDate())
+			: null;
 
 		const mappedProps: SingleDatePickerShape = {
 			id: this.props.id,
@@ -92,15 +118,15 @@ class Datovelger extends React.Component<Props, State> {
 		};
 
 		return (
-			<div>
-				<label htmlFor="date_input">Label for datovelger</label>
-				<br />
+			<div className="nav-datovelger">
 				<SingleDatePicker
-					date={this.props.dato}
 					firstDayOfWeek={1}
 					{...defaultProps}
 					{...mappedProps}
 					{...this.props.reactDatesProps}
+					phrases={fraserBokmal}
+					navNext={<Chevron type="høyre" />}
+					navPrev={<Chevron type="venstre" />}
 				/>
 			</div>
 		);

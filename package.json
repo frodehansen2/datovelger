@@ -4,11 +4,14 @@
 	"private": true,
 	"dependencies": {
 		"@types/react": "^16.0.40",
+		"chokidar": "^2.0.2",
+		"nav-frontend-chevron": "^1.0.2",
+		"nav-frontend-core": "^4.0.5",
+		"nav-frontend-typografi": "^2.0.2",
 		"react": "^16.2.0",
 		"react-dates": "^16.3.6",
 		"react-dom": "^16.2.0",
-		"react-scripts-ts": "2.13.0",
-		"chokidar": "^2.0.2"
+		"react-scripts-ts": "2.13.0"
 	},
 	"scripts": {
 		"start-js": "react-scripts-ts start",
@@ -19,10 +22,8 @@
 		"test": "react-scripts-ts test --env=jsdom",
 		"eject": "react-scripts-ts eject",
 		"build-css": "node-less-chokidar src/styles/index.less -o src/",
-		"watch-css":
-			"chokidar \"src/**/*.less\" -c \"node-less-chokidar ./src/styles/index.less\"",
-		"watch-css-old":
-			"npm run build-css && node-less-chokidar src/ -o src/ --watch --recursive"
+		"watch-css": "chokidar \"src/**/*.less\" -c \"node-less-chokidar ./src/styles/index.less\"",
+		"watch-css-old": "npm run build-css && node-less-chokidar src/ -o src/ --watch --recursive"
 	},
 	"resolutions": {
 		"@types/react": "^16.0.40"
@@ -32,6 +33,11 @@
 		"@types/node": "^9.4.6",
 		"@types/react-dates": "^16.0.5",
 		"@types/react-dom": "^15.5.7",
+		"classnames": "^2.2.5",
+		"nav-frontend-chevron-style": "^0.3.4",
+		"nav-frontend-knapper-style": "^0.3.6",
+		"nav-frontend-skjema-style": "^0.3.14",
+		"nav-frontend-typografi-style": "^1.0.7",
 		"node-less-chokidar": "^0.1.2",
 		"npm-run-all": "^4.1.2",
 		"tslint-config-prettier": "^1.9.0",

@@ -1,10 +1,17 @@
+@nodeModulesPath: '../../';
+@coreModulePath: '../../';
+
+@import '../components/datovelger/datovelger.less';
+@import '../../node_modules/nav-frontend-typografi-style/src/index.less';
+@import '../../node_modules/nav-frontend-knapper-style/src/index.less';
+
 * {
 	box-sizing: border-box;
 }
 
 .App {
 	text-align: center;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Source Sans Pro', Arial, sans-serif;
 	&__content {
 		max-width: 500px;
 		margin: 100px auto;
@@ -13,4 +20,33 @@
 		border-radius: 10px;
 		padding: 50px;
 	}
+}
+
+.datonav {
+	display: flex;
+	margin: 0 auto;
+	width: 100%;
+	background-color: #f1f1f1;
+	border-radius: 5px;
+	padding: 0.5rem;
+	justify-content: center;
+
+	&__button {
+		flex-grow: 0;
+		padding: 10px;
+		font-size: 1.2rem;
+		border: 2px solid #ccc;
+		border-radius: 5px;
+	}
+	.datovelger {
+		margin: 0 0.2rem;
+	}
+}
+.okButton {
+	margin: 10px;
+	padding: 10px;
+	font-size: 1.2rem;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+	width: 100%;
 }
