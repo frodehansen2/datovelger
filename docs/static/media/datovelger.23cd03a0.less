@@ -58,13 +58,23 @@
 	}
 }
 
-.DayPickerKeyboardShortcuts_buttonReset  {
-	&:focus {
-		.focusOutline();
-	}
+.DayPickerKeyboardShortcuts_showSpan__bottomRight {
+	transition: all 0.1s ease;
 }
 .DayPickerKeyboardShortcuts_show__bottomRight {
 	border-right-color: @navBla;
+	transition: all 0.1s ease;
+	&:focus {
+		.focusOutline();
+		border-radius: 5px;
+		.DayPickerKeyboardShortcuts_showSpan__bottomRight {
+			bottom: 5px;
+			right: -21px;
+		}
+	}
+	&:hover {
+		border-right-color: @orangeFocus;
+	}
 }
 
 .CalendarMonth_caption {
