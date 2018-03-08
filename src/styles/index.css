@@ -1354,6 +1354,12 @@ body .blokk-xl {
   border: 2px solid transparent;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PHBhdGggZmlsbD0iIzk5QzJFOCIgZD0iTTEyIDBDNS4zODMgMCAwIDUuMzg0IDAgMTJzNS4zODMgMTIgMTIgMTJjNi42MTYgMCAxMi01LjM4NCAxMi0xMlMxOC42MTYgMCAxMiAweiIvPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik0xNS40NzUgNy40MDVhMS41IDEuNSAwIDEgMSAyLjA1IDIuMTkxTDEwLjAyIDE2LjZhMS41MDIgMS41MDIgMCAwIDEtMi4wODItLjAzOGwtMi41LTIuNUExLjUgMS41IDAgMCAxIDcuNTYgMTEuOTRsMS40NzUgMS40NzUgNi40NC02LjAxeiIvPjwvc3ZnPg==');
 }
+.SingleDatePickerInput {
+  background-color: transparent;
+}
+.DateInput {
+  background-color: transparent;
+}
 .DateInput_input {
   padding: 0.45rem !important;
   background-color: #FFF !important;

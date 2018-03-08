@@ -27,7 +27,7 @@
 		"jest",
 		"src/setupTests.ts"
 	],
-
+	"typeRoots": ["./node_modules/@types", "./src/@types"],
 	"paths": {
 		"react": ["node_modules/@types/react"]
 	}

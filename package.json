@@ -6,8 +6,10 @@
 	"dependencies": {
 		"@types/react": "^16.0.40",
 		"chokidar": "^2.0.2",
+		"lodash.throttle": "^4.1.1",
 		"nav-frontend-chevron": "^1.0.2",
 		"nav-frontend-core": "^4.0.5",
+		"nav-frontend-js-utils": "^1.0.3",
 		"nav-frontend-typografi": "^2.0.2",
 		"react": "^16.2.0",
 		"react-dates": "^16.3.6",

@@ -3761,6 +3761,10 @@ lodash.templatesettings@^4.0.0:
   dependencies:
     lodash._reinterpolate "~3.0.0"
 
+lodash.throttle@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
+
 lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
@@ -4067,6 +4071,10 @@ nav-frontend-chevron@^1.0.2:
 nav-frontend-core@^4.0.2, nav-frontend-core@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/nav-frontend-core/-/nav-frontend-core-4.0.5.tgz#309c9de6a5146e8e93b3f52d4fc42cc309acdca1"
+
+nav-frontend-js-utils@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/nav-frontend-js-utils/-/nav-frontend-js-utils-1.0.3.tgz#79ec7b3f20c2781d2f7f38b04d0a0dd669e9be0e"
 
 nav-frontend-knapper-style@^0.3.6:
   version "0.3.6"

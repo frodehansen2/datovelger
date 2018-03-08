@@ -25,7 +25,7 @@ export interface Props {
 	/** Avgrensninger på hvilke datoer som er gyldig og ikke */
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Funksjon som kalles når gyldig dato velges */
-	onChange: (date: Date, inputValue?: string) => void;
+	onChange: (date: Date | null, inputValue?: string) => void;
 	/** Om tastaturinfo skal vises. Default true */
 	skjulTastaturinfo?: boolean;
 	/** react-dates props */
@@ -47,14 +47,14 @@ const defaultProps: SingleDatePickerShape = {
 	focused: false,
 	numberOfMonths: 1,
 	firstDayOfWeek: 1,
-	hideKeyboardShortcutsPanel: false
+	hideKeyboardShortcutsPanel: false,
+	noBorder: true
 };
 
 const mapProps = (props: Props) => {
 	const { avgrensninger } = props;
 
 	if (avgrensninger) {
-		// const dato = ;
 		const minDato =
 			avgrensninger.minDato && normaliserDato(avgrensninger.minDato);
 		const maksDato =
@@ -83,7 +83,9 @@ class Datovelger extends React.Component<Props, State> {
 		this.onFocusChange = this.onFocusChange.bind(this);
 		this.getInputValue = this.getInputValue.bind(this);
 		this.getDato = this.getDato.bind(this);
+		this.onClose = this.onClose.bind(this);
 		this.onComponentBlur = this.onComponentBlur.bind(this);
+		this.getInputField = this.getInputField.bind(this);
 		this.state = {
 			focused: false,
 			dato: props.dato ? moment(normaliserDato(props.dato)) : null
@@ -114,18 +116,33 @@ class Datovelger extends React.Component<Props, State> {
 	}
 
 	getInputValue() {
-		const el = document.getElementById(this.props.id) as HTMLInputElement;
+		const el = this.getInputField();
 		if (el && el.value) {
 			return el.value;
 		}
 		return undefined;
 	}
 
+	getInputField() {
+		return document.getElementById(this.props.id) as HTMLInputElement;
+	}
+
+	triggerOnChange() {
+		setTimeout(() => {
+			const { dato } = this.state;
+			if (dato) {
+				this.props.onChange(dato.toDate(), this.getInputValue());
+			} else {
+				if (document.activeElement !== this.getInputField()) {
+					this.props.onChange(null, this.getInputValue());
+				}
+			}
+		}, 0);
+	}
+
 	onDateChange(date: Moment | null) {
 		this.setState({ dato: date });
-		if (moment.isMoment(date)) {
-			this.props.onChange(date.toDate(), this.getInputValue());
-		}
+		this.triggerOnChange();
 	}
 
 	onFocusChange({ focused }: any) {
@@ -134,14 +151,19 @@ class Datovelger extends React.Component<Props, State> {
 		});
 	}
 
+	onClose() {
+		this.triggerOnChange();
+	}
+
 	onComponentBlur(e: React.FocusEvent<HTMLDivElement>) {
 		const el = this.divContainer;
 		if (el) {
 			setTimeout(() => {
 				if (!el.contains(document.activeElement)) {
 					this.setState({ focused: false });
+					this.triggerOnChange();
 				}
-			}, TRANSITION_DURATION + 5);
+			}, TRANSITION_DURATION + 20);
 		}
 	}
 
@@ -152,6 +174,7 @@ class Datovelger extends React.Component<Props, State> {
 			focused: this.state.focused,
 			onDateChange: this.onDateChange,
 			onFocusChange: this.onFocusChange,
+			onClose: this.onClose,
 			keepOpenOnDateSelect: false,
 			placeholder: 'dd.mm.åååå',
 			transitionDuration: TRANSITION_DURATION,

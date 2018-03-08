@@ -29,7 +29,6 @@ class App extends React.Component<Props, State> {
 	}
 
 	oppdaterDato(dato: Date | null, inputValue: string) {
-		console.log('App.oppdaterDato', dato, inputValue);
 		this.setState({ dato });
 	}
 
