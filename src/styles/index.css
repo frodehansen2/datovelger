@@ -1408,6 +1408,19 @@ body .blokk-xl {
 .DayPickerKeyboardShortcuts_show__bottomRight:hover {
   border-right-color: #FFBD66;
 }
+.DayPickerKeyboardShortcuts_close {
+  padding: 5px 5px 2px 5px;
+}
+.DayPickerKeyboardShortcuts_close:focus,
+.DayPickerKeyboardShortcuts_close:active {
+  outline: none;
+  box-shadow: 0 0 0 3px #FFBD66;
+  border-radius: 3px;
+}
+.DayPickerKeyboardShortcuts_close:hover {
+  outline: none;
+  box-shadow: 0 0 0 1px #0067C5;
+}
 .CalendarMonth_caption {
   font-family: 'Source Sans Pro', Arial, sans-serif;
   font-size: 1.25rem;
