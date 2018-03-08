@@ -53,15 +53,19 @@ const defaultProps: SingleDatePickerShape = {
 const mapProps = (props: Props) => {
 	const { avgrensninger } = props;
 
-	if (avgrensninger && props.dato) {
-		const dato = normaliserDato(props.dato);
+	if (avgrensninger) {
+		// const dato = ;
 		const minDato =
 			avgrensninger.minDato && normaliserDato(avgrensninger.minDato);
 		const maksDato =
 			avgrensninger.maksDato && normaliserDato(avgrensninger.maksDato);
 
 		return {
-			enableOutsideDays: minDato && minDato.isBefore(dato),
+			enableOutsideDays:
+				(props.dato &&
+					minDato &&
+					minDato.isBefore(normaliserDato(props.dato))) ||
+				false,
 			isOutsideRange: (d: Moment) =>
 				erDatoInnenforTidsperiode(d, minDato, maksDato),
 			isDayBlocked: (d: Moment) => erDatoTilgjengelig(d, avgrensninger)
