@@ -3,11 +3,16 @@ import Datovelger from './components/datovelger/Datovelger';
 import * as moment from 'moment';
 
 import './styles/index.css';
+import { DatovelgerAvgrensninger } from './components/datovelger/types';
+import { validerDato } from './components/datovelger/datovalidering';
 
 interface Props {}
 
 export interface State {
 	dato: Date | null;
+	inputValue: string;
+	error: string | undefined;
+	avgrensninger: DatovelgerAvgrensninger;
 }
 
 class App extends React.Component<Props, State> {
@@ -18,7 +23,24 @@ class App extends React.Component<Props, State> {
 		this.onClose = this.onClose.bind(this);
 		this.addDay = this.addDay.bind(this);
 		this.state = {
-			dato: null
+			dato: null,
+			inputValue: '',
+			error: '',
+			avgrensninger: {
+				minDato: moment()
+					.add(-5, 'days')
+					.toDate(),
+				maksDato: moment()
+					.add(4, 'months')
+					.toDate(),
+				helgedagerIkkeTillatt: true,
+				ugyldigeTidsperioder: [
+					{
+						startdato: new Date(2018, 2, 15),
+						sluttdato: new Date(2018, 2, 22)
+					}
+				]
+			}
 		};
 	}
 
@@ -29,7 +51,11 @@ class App extends React.Component<Props, State> {
 	}
 
 	oppdaterDato(dato: Date | null, inputValue: string) {
-		this.setState({ dato });
+		this.setState({
+			dato,
+			inputValue,
+			error: validerDato(dato || inputValue, this.state.avgrensninger)
+		});
 	}
 
 	onClose(dato: Date, inputValue: string) {
@@ -55,29 +81,25 @@ class App extends React.Component<Props, State> {
 				<div className="App__content">
 					<h1>Datovelger basert på Airbnb react-dates </h1>
 					<form action="#" onSubmit={this.handleSubmit}>
+						<p>
+							Min dato:{' '}
+							{moment(this.state.avgrensninger.minDato).toLocaleString()}
+						</p>
+						<p>
+							Maks dato:{' '}
+							{moment(this.state.avgrensninger.maksDato).toLocaleString()}
+						</p>
 						<div className="datovelger">
 							<Datovelger
 								id="datovelger"
 								dato={this.state.dato}
 								onChange={this.oppdaterDato}
-								avgrensninger={{
-									minDato: moment()
-										.add(-5, 'days')
-										.toDate(),
-									maksDato: moment()
-										.add(4, 'months')
-										.toDate(),
-									helgedagerIkkeTillatt: true,
-									ugyldigeTidsperioder: [
-										{
-											startdato: new Date(2018, 2, 15),
-											sluttdato: new Date(2018, 2, 22)
-										}
-									]
-								}}
+								avgrensninger={this.state.avgrensninger}
 							/>
 						</div>
 						<p>Valgt dato: {valgtDato}</p>
+						<p>Input-verdi: {this.state.inputValue}</p>
+						<p>Validering: {this.state.error}</p>
 						<button type="submit" className="okButton">
 							Ok
 						</button>

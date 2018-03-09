@@ -11,7 +11,7 @@ type DatoValideringsfeil =
 	| 'datoErIUgyldigPeriode';
 
 export const validerDato = (
-	dato: Date,
+	dato: Date | string | null | undefined,
 	avgrensninger: DatovelgerAvgrensninger
 ): DatoValideringsfeil | undefined => {
 	if (!dato) {
@@ -23,13 +23,13 @@ export const validerDato = (
 	if (!datoErEtterMinDato(dato, avgrensninger.minDato)) {
 		return 'datoErFørMinDato';
 	}
-	if (datoErFørSluttdato(dato, avgrensninger.maksDato)) {
+	if (!datoErFørSluttdato(dato, avgrensninger.maksDato)) {
 		return 'datoErEtterMaksDato';
 	}
 	if (!datoErUkedag(dato)) {
 		return 'datoErIkkeUkedag';
 	}
-	if (datoErIkkeIUgyldigePeriode(dato, avgrensninger.ugyldigeTidsperioder)) {
+	if (erDatoITidsperioder(dato, avgrensninger.ugyldigeTidsperioder)) {
 		return 'datoErIUgyldigPeriode';
 	}
 
@@ -55,25 +55,25 @@ export const datoErFørSluttdato = (dato: Date, maksDato?: Date) => {
 
 export const datoErUkedag = (dato: Date) => {
 	const dag = normaliserDato(dato).isoWeekday();
-	return dag === 6 || dag === 7;
+	return dag <= 5;
 };
 
-export const datoErIkkeIUgyldigePeriode = (
+export const erDatoITidsperioder = (
 	dato: Date,
-	ugyldigeTidsperioder?: DatovelgerTidsperiode[]
+	tidsperioder?: DatovelgerTidsperiode[]
 ) => {
-	if (!ugyldigeTidsperioder || ugyldigeTidsperioder.length === 0) {
-		return true;
+	if (!tidsperioder || tidsperioder.length === 0) {
+		return false;
 	}
 	const d = normaliserDato(dato);
-	let gyldig: boolean = true;
-	ugyldigeTidsperioder.forEach((periode) => {
+	let gyldig: boolean = false;
+	tidsperioder.forEach((periode) => {
 		if (
 			gyldig &&
 			d.isSameOrAfter(normaliserDato(periode.startdato)) &&
 			d.isSameOrBefore(normaliserDato(periode.sluttdato))
 		) {
-			gyldig = false;
+			gyldig = true;
 		}
 	});
 	return gyldig;
