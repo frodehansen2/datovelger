@@ -14,10 +14,16 @@ export const validerDato = (
 	dato: Date | string | null | undefined,
 	avgrensninger: DatovelgerAvgrensninger
 ): DatoValideringsfeil | undefined => {
+	if (dato === 'string' && dato.length < 8) {
+		dato = undefined;
+	}
 	if (!dato) {
 		return 'udefinert';
 	}
-	if (!moment.isDate(dato)) {
+	if (typeof dato === 'string') {
+		dato = moment(dato).toDate();
+	}
+	if (!moment(dato).isValid()) {
 		return 'ugyldigDato';
 	}
 	if (!datoErEtterMinDato(dato, avgrensninger.minDato)) {
