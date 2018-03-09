@@ -1,0 +1,205 @@
+@import '../../../node_modules/nav-frontend-knapper-style/src/mixins.less';
+@import '../../../node_modules/nav-frontend-chevron-style/src/index.less';
+@import '../../../node_modules/nav-frontend-typografi-style/src/mixins.less';
+@import '../../../node_modules/nav-frontend-skjema-style/src/index.less';
+
+@z-day: 2;
+@c-blockedDays: #f1f1f1;
+@inputHeight: 40px;
+
+.focusOutline() {
+	outline: none;
+	box-shadow: 0 0 0 3px @orangeFocus;
+	border-radius: 3px;
+}
+
+.hoverOutline() {
+	outline: none;
+	box-shadow: 0 0 0 1px @navBla;
+}
+
+.inputStyling() {
+	padding: 0.45rem;
+	background-color: @white;
+	border-radius: @border-radius-base;
+	border: 1px solid @grayIcon;
+	box-sizing: border-box;
+
+	&:focus {
+		outline: 0;
+		box-shadow: 0 0 0 3px @orangeFocus;
+	}
+
+	&:hover {
+		border-color: @navBla;
+		.mixin-transition(200ms, border-color);
+	}
+
+	&:disabled {
+		background-color: @navLysGra;
+		border-color: @navGra40;
+		box-shadow: none;
+		color: @navMorkGra !important;
+		font-style: normal;
+	}
+}
+
+.SingleDatePickerInput {
+	background-color: transparent;
+}
+
+.DayPicker {
+	.typo-normal-mixin();
+}
+
+.DayPicker_weekHeader {
+	top: 60px;
+	small {
+		font-size: 0.8rem;
+	}
+	&_li  {
+		text-transform: capitalize;
+		&:after {
+			content: '.';
+		}
+	}
+}
+
+.DayPickerKeyboardShortcuts_showSpan__bottomRight {
+	transition: all 0.1s ease;
+}
+.DayPickerKeyboardShortcuts_show__bottomRight {
+	border-right-color: @navBla;
+	transition: all 0.1s ease;
+	&:focus {
+		.focusOutline();
+		border-radius: 5px;
+		.DayPickerKeyboardShortcuts_showSpan__bottomRight {
+			bottom: 5px;
+			right: -21px;
+		}
+	}
+	&:hover {
+		border-right-color: @orangeFocus;
+	}
+}
+
+.DayPickerKeyboardShortcuts_close {
+	padding: 5px 5px 2px 5px;
+	&:focus,
+	&:active {
+		.focusOutline();
+	}
+	&:hover {
+		.hoverOutline();
+	}
+}
+
+.DayPickerNavigation_button {
+	.knappbase-mixin(inherit);
+	border: none;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	/** Justering på grunn av chevron ikke sentreres */
+	.nav-frontend-chevron {
+		margin-top: -1px;
+		margin-bottom: 1px;
+	}
+	&:hover {
+		.hoverOutline();
+	}
+	&:focus,
+	&:active {
+		.focusOutline();
+	}
+}
+
+.CalendarMonth_caption {
+	.typo-undertittel-mixin();
+	text-transform: capitalize;
+	color: @navMorkGra;
+	strong {
+		font-weight: normal;
+	}
+}
+
+.CalendarDay {
+	border: none !important;
+	color: @navMorkGra;
+	font-size: 1rem;
+
+	&:hover:not(.CalendarDay__blocked_calendar):not(.CalendarDay__blocked_out_of_range) {
+		.hoverOutline();
+		z-index: @z-day;
+		position: relative;
+		background-color: inherit;
+		border-radius: 2px;
+	}
+	&:focus {
+		.focusOutline();
+		position: relative;
+		z-index: @z-day;
+	}
+
+	&__selected {
+		color: @white;
+		background-color: @navBla !important;
+	}
+	&__blocked_calendar,
+	&__blocked_out_of_range {
+		color: @navGra20 !important;
+		background-color: @c-blockedDays !important;
+	}
+	&__blocked_out_of_range {
+		color: @navGra20 !important;
+	}
+	&__lastDayOfWeek {
+		color: @navRodLighten60 !important;
+	}
+}
+
+.DateInput {
+	background-color: transparent;
+	&_fang {
+		top: 60px;
+		transform: translateY(1px); // For å unngå space mellom pil og kalender
+	}
+}
+
+.DateInput_input {
+	.inputStyling();
+	height: @inputHeight;
+}
+
+.nav-datovelger__kalenderikon {
+	@borderRadius: 4px 0 0 4px;
+	background-color: @white;
+	border: 1px solid #0067c5;
+	border-radius: @borderRadius;
+	padding: 9px 9px 9px 9px;
+	margin: 0;
+	height: @inputHeight;
+	z-index: 2;
+	position: absolute;
+	> svg {
+		width: 16px;
+		height: 16px;
+		transform: translateY(2px);
+	}
+	&:active,
+	&:hover,
+	&:focus {
+		outline: none;
+	}
+}
+
+.nav-datovelger {
+	&--medKalenderikon {
+		.DateInput {
+			width: 11rem;
+		}
+		.DateInput_input {
+			padding-left: 3rem;
+		}
+	}
+}
