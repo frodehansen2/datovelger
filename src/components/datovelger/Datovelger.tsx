@@ -33,6 +33,7 @@ export interface Props {
 }
 
 const TRANSITION_DURATION = 50;
+const BLUR_DELAY = TRANSITION_DURATION + 100;
 
 interface State {
 	focused: boolean;
@@ -76,6 +77,7 @@ const mapProps = (props: Props) => {
 
 class Datovelger extends React.Component<Props, State> {
 	divContainer: HTMLDivElement | null;
+	blurTimerId: any;
 
 	constructor(props: Props) {
 		super(props);
@@ -86,6 +88,12 @@ class Datovelger extends React.Component<Props, State> {
 		this.onClose = this.onClose.bind(this);
 		this.onComponentBlur = this.onComponentBlur.bind(this);
 		this.getInputField = this.getInputField.bind(this);
+		this.onNextMonthClick = this.onNextMonthClick.bind(this);
+		this.onPrevMonthClick = this.onPrevMonthClick.bind(this);
+		this.keepFocusOnButtonAfterMonthClick = this.keepFocusOnButtonAfterMonthClick.bind(
+			this
+		);
+		this.resetBlurTimer = this.resetBlurTimer.bind(this);
 		this.state = {
 			focused: false,
 			dato: props.dato ? moment(normaliserDato(props.dato)) : null
@@ -155,15 +163,59 @@ class Datovelger extends React.Component<Props, State> {
 		this.triggerOnChange();
 	}
 
+	onNextMonthClick(newCurrentMonth: Moment) {
+		this.resetBlurTimer();
+		if (this.blurTimerId) {
+			clearTimeout(this.blurTimerId);
+			this.blurTimerId = undefined;
+		}
+		setTimeout(() => this.keepFocusOnButtonAfterMonthClick('next'), 0);
+	}
+
+	onPrevMonthClick(newCurrentMonth: Moment) {
+		this.resetBlurTimer();
+		if (this.blurTimerId) {
+			clearTimeout(this.blurTimerId);
+			this.blurTimerId = undefined;
+		}
+		setTimeout(() => this.keepFocusOnButtonAfterMonthClick('prev'), 0);
+	}
+
+	keepFocusOnButtonAfterMonthClick(button: 'next' | 'prev') {
+		if (
+			this.divContainer &&
+			!this.divContainer.contains(document.activeElement)
+		) {
+			const bt = this.divContainer.querySelector(
+				`.DayPickerNavigation_button:nth-child(${button === 'next' ? 2 : 1})`
+			) as HTMLButtonElement;
+			if (bt) {
+				bt.focus();
+			}
+		}
+	}
+
+	resetBlurTimer() {
+		if (this.blurTimerId) {
+			clearTimeout(this.blurTimerId);
+			this.blurTimerId = undefined;
+		}
+	}
+
 	onComponentBlur(e: React.FocusEvent<HTMLDivElement>) {
+		this.resetBlurTimer();
 		const el = this.divContainer;
 		if (el) {
-			setTimeout(() => {
-				if (!el.contains(document.activeElement)) {
+			if (this.blurTimerId) {
+				clearTimeout(this.blurTimerId);
+			}
+			this.blurTimerId = setTimeout(() => {
+				const activeElement = document.activeElement;
+				if (!el.contains(activeElement)) {
 					this.setState({ focused: false });
 					this.triggerOnChange();
 				}
-			}, TRANSITION_DURATION + 20);
+			}, BLUR_DELAY);
 		}
 	}
 
@@ -195,6 +247,8 @@ class Datovelger extends React.Component<Props, State> {
 					{...defaultProps}
 					{...mappedProps}
 					{...this.props.reactDatesProps}
+					onNextMonthClick={this.onNextMonthClick}
+					onPrevMonthClick={this.onPrevMonthClick}
 				/>
 			</div>
 		);
