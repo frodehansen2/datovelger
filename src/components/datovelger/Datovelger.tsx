@@ -14,9 +14,9 @@ import {
 	erDatoInnenforTidsperiode
 } from './utils';
 
-import fraserBokmal from './phrases_nb_NO';
+import fraserBokmal from './phrases/phrases_nb_NO';
 
-import './datovelger.less';
+// import './styles/datovelger.less';
 import KalenderIkon from './KalenderIkon';
 
 export interface Props {
@@ -239,8 +239,16 @@ class Datovelger extends React.Component<Props, State> {
 			keepOpenOnDateSelect: false,
 			placeholder: 'dd.mm.åååå',
 			transitionDuration: TRANSITION_DURATION,
-			navNext: <Chevron type="høyre" />,
-			navPrev: <Chevron type="venstre" />,
+			navNext: (
+				<span className="nav-datovelger__chevron">
+					<Chevron type="høyre" />
+				</span>
+			),
+			navPrev: (
+				<span className="nav-datovelger__chevron">
+					<Chevron type="venstre" />
+				</span>
+			),
 			phrases: fraserBokmal as any,
 			hideKeyboardShortcutsPanel: this.props.skjulTastaturinfo,
 			...mapProps(this.props)

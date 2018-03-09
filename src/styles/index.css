@@ -1,17 +1,3 @@
-.knappmini-mixin--mini {
-  font-size: 0.875em;
-  text-transform: none;
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-}
-.knappdisabled-mixin:disabled,
-.knappdisabled-mixin--disabled {
-  background-color: #B7B1A9;
-  border-color: #B7B1A9;
-  color: #FFF;
-  box-shadow: none;
-  transform: none;
-}
 .chevron--ned {
   display: inline-block;
   flex-shrink: 0;
@@ -1375,6 +1361,23 @@ body .blokk-xl {
 .DayPicker_weekHeader_li:after {
   content: '.';
 }
+.DayPickerKeyboardShortcuts_panel {
+  margin: 1rem;
+  padding: 1rem;
+}
+.DayPickerKeyboardShortcuts_close {
+  padding: 5px 5px 2px 5px;
+}
+.DayPickerKeyboardShortcuts_close:focus,
+.DayPickerKeyboardShortcuts_close:active {
+  outline: none;
+  box-shadow: 0 0 0 3px #FFBD66;
+  border-radius: 3px;
+}
+.DayPickerKeyboardShortcuts_close:hover {
+  outline: none;
+  box-shadow: 0 0 0 1px #0067C5;
+}
 .DayPickerKeyboardShortcuts_showSpan__bottomRight {
   transition: all 0.1s ease;
 }
@@ -1395,19 +1398,6 @@ body .blokk-xl {
 .DayPickerKeyboardShortcuts_show__bottomRight:hover {
   border-right-color: #FFBD66;
 }
-.DayPickerKeyboardShortcuts_close {
-  padding: 5px 5px 2px 5px;
-}
-.DayPickerKeyboardShortcuts_close:focus,
-.DayPickerKeyboardShortcuts_close:active {
-  outline: none;
-  box-shadow: 0 0 0 3px #FFBD66;
-  border-radius: 3px;
-}
-.DayPickerKeyboardShortcuts_close:hover {
-  outline: none;
-  box-shadow: 0 0 0 1px #0067C5;
-}
 .DayPickerNavigation_button {
   display: inline-block;
   font-weight: 600;
@@ -1426,15 +1416,11 @@ body .blokk-xl {
   border: none;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  /** Justering på grunn av chevron ikke sentreres */
+  margin-top: 1px;
 }
 .DayPickerNavigation_button:focus {
   outline: none;
   box-shadow: 0 0 0 3px #FFBD66;
-}
-.DayPickerNavigation_button .nav-frontend-chevron {
-  margin-top: -1px;
-  margin-bottom: 1px;
 }
 .DayPickerNavigation_button:hover {
   outline: none;
@@ -1445,6 +1431,36 @@ body .blokk-xl {
   outline: none;
   box-shadow: 0 0 0 3px #FFBD66;
   border-radius: 3px;
+}
+.DateInput {
+  background-color: transparent;
+}
+.DateInput_fang {
+  top: 60px;
+  transform: translateY(1px);
+}
+.DateInput_input {
+  padding: 0.45rem;
+  background-color: #FFF;
+  border-radius: 4px;
+  border: 1px solid #B7B1A9;
+  box-sizing: border-box;
+  height: 40px;
+}
+.DateInput_input:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px #FFBD66;
+}
+.DateInput_input:hover {
+  border-color: #0067C5;
+  transition: border-color 200ms cubic-bezier(0.465, 0.183, 0.153, 0.946);
+}
+.DateInput_input:disabled {
+  background-color: #E9E7E7;
+  border-color: #B7B1A9;
+  box-shadow: none;
+  color: #3E3832 !important;
+  font-style: normal;
 }
 .CalendarMonth_caption {
   font-family: 'Source Sans Pro', Arial, sans-serif;
@@ -1492,35 +1508,8 @@ body .blokk-xl {
 .CalendarDay__lastDayOfWeek {
   color: #e79999 !important;
 }
-.DateInput {
-  background-color: transparent;
-}
-.DateInput_fang {
-  top: 60px;
-  transform: translateY(1px);
-}
-.DateInput_input {
-  padding: 0.45rem;
-  background-color: #FFF;
-  border-radius: 4px;
-  border: 1px solid #B7B1A9;
-  box-sizing: border-box;
-  height: 40px;
-}
-.DateInput_input:focus {
-  outline: 0;
-  box-shadow: 0 0 0 3px #FFBD66;
-}
-.DateInput_input:hover {
-  border-color: #0067C5;
-  transition: border-color 200ms cubic-bezier(0.465, 0.183, 0.153, 0.946);
-}
-.DateInput_input:disabled {
-  background-color: #E9E7E7;
-  border-color: #B7B1A9;
-  box-shadow: none;
-  color: #3E3832 !important;
-  font-style: normal;
+.nav-datovelger {
+  /** Justering på grunn av at chevron ikke sentreres vertikalt */
 }
 .nav-datovelger__kalenderikon {
   background-color: #FFF;
@@ -1547,6 +1536,11 @@ body .blokk-xl {
 }
 .nav-datovelger--medKalenderikon .DateInput_input {
   padding-left: 3rem;
+}
+.nav-datovelger__chevron {
+  display: inline-block;
+  margin-top: -1px;
+  margin-bottom: 1px;
 }
 /*
 ---------------
@@ -1687,6 +1681,20 @@ GRID
   line-height: 1.25rem;
   font-family: 'Source Sans Pro', Arial, sans-serif;
   font-weight: 400;
+}
+.knappmini-mixin--mini {
+  font-size: 0.875em;
+  text-transform: none;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.knappdisabled-mixin:disabled,
+.knappdisabled-mixin--disabled {
+  background-color: #B7B1A9;
+  border-color: #B7B1A9;
+  color: #FFF;
+  box-shadow: none;
+  transform: none;
 }
 .knapp {
   display: inline-block;

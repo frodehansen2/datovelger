@@ -1,0 +1,41 @@
+@import '_variabler.less';
+@import '_mixins.less';
+@import '_react-dates-overrides.less';
+
+.nav-datovelger {
+	&__kalenderikon {
+		@borderRadius: 4px 0 0 4px;
+		background-color: @white;
+		border: 1px solid #0067c5;
+		border-radius: @borderRadius;
+		padding: 9px 9px 9px 9px;
+		margin: 0;
+		height: @inputHeight;
+		z-index: 2;
+		position: absolute;
+		> svg {
+			width: 16px;
+			height: 16px;
+			transform: translateY(2px);
+		}
+		&:active,
+		&:hover,
+		&:focus {
+			outline: none;
+		}
+	}
+	&--medKalenderikon {
+		.DateInput {
+			width: 11rem;
+		}
+		.DateInput_input {
+			padding-left: 3rem;
+		}
+	}
+	/** Justering på grunn av at chevron ikke sentreres vertikalt */
+	&__chevron {
+		display: inline-block;
+		margin-top: -1px;
+		margin-bottom: 1px;
+	}
+}

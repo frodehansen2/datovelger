@@ -1,4 +1,4 @@
-import { DatovelgerPhrases, FraseDato } from './types';
+import { DatovelgerPhrases, FraseDato } from '../types';
 
 const fraserBokmal: DatovelgerPhrases = {
 	calendarLabel: 'Kalender',
