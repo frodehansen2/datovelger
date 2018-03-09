@@ -3,6 +3,7 @@ import { SingleDatePicker, SingleDatePickerShape } from 'react-dates';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import Chevron from 'nav-frontend-chevron';
+import * as classnames from 'classnames';
 
 import '../../../node_modules/react-dates/lib/css/_datepicker.css';
 
@@ -16,6 +17,7 @@ import {
 import fraserBokmal from './phrases_nb_NO';
 
 import './datovelger.less';
+import KalenderIkon from './KalenderIkon';
 
 export interface Props {
 	/** identifikator */
@@ -30,6 +32,8 @@ export interface Props {
 	skjulTastaturinfo?: boolean;
 	/** react-dates props */
 	reactDatesProps?: SingleDatePickerShape | any;
+	/** Default true */
+	visKalenderikon?: boolean;
 }
 
 const TRANSITION_DURATION = 50;
@@ -90,6 +94,7 @@ class Datovelger extends React.Component<Props, State> {
 		this.getInputField = this.getInputField.bind(this);
 		this.onNextMonthClick = this.onNextMonthClick.bind(this);
 		this.onPrevMonthClick = this.onPrevMonthClick.bind(this);
+		this.onCalendarIconClick = this.onCalendarIconClick.bind(this);
 		this.keepFocusOnButtonAfterMonthClick = this.keepFocusOnButtonAfterMonthClick.bind(
 			this
 		);
@@ -195,20 +200,11 @@ class Datovelger extends React.Component<Props, State> {
 		}
 	}
 
-	resetBlurTimer() {
-		if (this.blurTimerId) {
-			clearTimeout(this.blurTimerId);
-			this.blurTimerId = undefined;
-		}
-	}
-
 	onComponentBlur(e: React.FocusEvent<HTMLDivElement>) {
 		this.resetBlurTimer();
 		const el = this.divContainer;
 		if (el) {
-			if (this.blurTimerId) {
-				clearTimeout(this.blurTimerId);
-			}
+			this.resetBlurTimer();
 			this.blurTimerId = setTimeout(() => {
 				const activeElement = document.activeElement;
 				if (!el.contains(activeElement)) {
@@ -216,6 +212,19 @@ class Datovelger extends React.Component<Props, State> {
 					this.triggerOnChange();
 				}
 			}, BLUR_DELAY);
+		}
+	}
+
+	resetBlurTimer() {
+		if (this.blurTimerId) {
+			clearTimeout(this.blurTimerId);
+			this.blurTimerId = undefined;
+		}
+	}
+
+	onCalendarIconClick() {
+		if (!this.state.focused) {
+			this.getInputField().focus();
 		}
 	}
 
@@ -237,12 +246,28 @@ class Datovelger extends React.Component<Props, State> {
 			...mapProps(this.props)
 		};
 
+		const { visKalenderikon = true } = this.props;
+
 		return (
 			<div
-				className="nav-datovelger"
+				className={classnames('nav-datovelger', {
+					'nav-datovelger--medKalenderikon': visKalenderikon
+				})}
 				onBlur={this.onComponentBlur}
 				ref={(c) => (this.divContainer = c)}
 			>
+				{visKalenderikon && (
+					<button
+						type="button"
+						className="nav-datovelger__kalenderikon"
+						role="presentation"
+						aria-hidden="true"
+						tabIndex={-1}
+						onClick={this.onCalendarIconClick}
+					>
+						<KalenderIkon />
+					</button>
+				)}
 				<SingleDatePicker
 					{...defaultProps}
 					{...mappedProps}

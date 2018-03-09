@@ -1357,31 +1357,6 @@ body .blokk-xl {
 .SingleDatePickerInput {
   background-color: transparent;
 }
-.DateInput {
-  background-color: transparent;
-}
-.DateInput_input {
-  padding: 0.45rem !important;
-  background-color: #FFF !important;
-  border-radius: 4px !important;
-  border: 1px solid #B7B1A9 !important;
-  box-sizing: border-box !important;
-}
-.DateInput_input:focus {
-  outline: 0 !important;
-  box-shadow: 0 0 0 3px #FFBD66 !important;
-}
-.DateInput_input:hover {
-  border-color: #0067C5 !important;
-  transition: border-color 200ms cubic-bezier(0.465, 0.183, 0.153, 0.946) !important;
-}
-.DateInput_input:disabled {
-  background-color: #E9E7E7 !important;
-  border-color: #B7B1A9 !important;
-  box-shadow: none !important;
-  color: #3E3832 !important;
-  font-style: normal !important;
-}
 .DayPicker {
   font-family: 'Source Sans Pro', Arial, sans-serif;
   font-size: 1rem;
@@ -1516,6 +1491,62 @@ body .blokk-xl {
 }
 .CalendarDay__lastDayOfWeek {
   color: #e79999 !important;
+}
+.DateInput {
+  background-color: transparent;
+}
+.DateInput_fang {
+  top: 60px;
+  transform: translateY(1px);
+}
+.DateInput_input {
+  padding: 0.45rem;
+  background-color: #FFF;
+  border-radius: 4px;
+  border: 1px solid #B7B1A9;
+  box-sizing: border-box;
+  height: 40px;
+}
+.DateInput_input:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px #FFBD66;
+}
+.DateInput_input:hover {
+  border-color: #0067C5;
+  transition: border-color 200ms cubic-bezier(0.465, 0.183, 0.153, 0.946);
+}
+.DateInput_input:disabled {
+  background-color: #E9E7E7;
+  border-color: #B7B1A9;
+  box-shadow: none;
+  color: #3E3832 !important;
+  font-style: normal;
+}
+.nav-datovelger__kalenderikon {
+  background-color: #FFF;
+  border: 1px solid #0067c5;
+  border-radius: 4px 0 0 4px;
+  padding: 9px 9px 9px 9px;
+  margin: 0;
+  height: 40px;
+  z-index: 2;
+  position: absolute;
+}
+.nav-datovelger__kalenderikon > svg {
+  width: 16px;
+  height: 16px;
+  transform: translateY(2px);
+}
+.nav-datovelger__kalenderikon:active,
+.nav-datovelger__kalenderikon:hover,
+.nav-datovelger__kalenderikon:focus {
+  outline: none;
+}
+.nav-datovelger--medKalenderikon .DateInput {
+  width: 11rem;
+}
+.nav-datovelger--medKalenderikon .DateInput_input {
+  padding-left: 3rem;
 }
 /*
 ---------------

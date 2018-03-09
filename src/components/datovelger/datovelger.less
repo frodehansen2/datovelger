@@ -5,6 +5,7 @@
 
 @z-day: 2;
 @c-blockedDays: #f1f1f1;
+@inputHeight: 40px;
 
 .focusOutline() {
 	outline: none;
@@ -45,13 +46,6 @@
 
 .SingleDatePickerInput {
 	background-color: transparent;
-}
-.DateInput {
-	background-color: transparent;
-}
-
-.DateInput_input {
-	.inputStyling() !important;
 }
 
 .DayPicker {
@@ -161,5 +155,51 @@
 	}
 	&__lastDayOfWeek {
 		color: @navRodLighten60 !important;
+	}
+}
+
+.DateInput {
+	background-color: transparent;
+	&_fang {
+		top: 60px;
+		transform: translateY(1px); // For å unngå space mellom pil og kalender
+	}
+}
+
+.DateInput_input {
+	.inputStyling();
+	height: @inputHeight;
+}
+
+.nav-datovelger__kalenderikon {
+	@borderRadius: 4px 0 0 4px;
+	background-color: @white;
+	border: 1px solid #0067c5;
+	border-radius: @borderRadius;
+	padding: 9px 9px 9px 9px;
+	margin: 0;
+	height: @inputHeight;
+	z-index: 2;
+	position: absolute;
+	> svg {
+		width: 16px;
+		height: 16px;
+		transform: translateY(2px);
+	}
+	&:active,
+	&:hover,
+	&:focus {
+		outline: none;
+	}
+}
+
+.nav-datovelger {
+	&--medKalenderikon {
+		.DateInput {
+			width: 11rem;
+		}
+		.DateInput_input {
+			padding-left: 3rem;
+		}
 	}
 }
