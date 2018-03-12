@@ -1677,7 +1677,7 @@ body .blokk-xl {
 .nav-dagvelger .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day.DayPicker-Day--disabled:focus,
 .nav-dagvelger .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day .DayPicker-Day--outside:focus {
   outline: none;
-  box-shadow: 0 0 0 1px #B7B1A9;
+  box-shadow: 0 0 0 1px #FFBD66;
   border-radius: 2px;
   z-index: 2;
   position: relative;
@@ -1698,15 +1698,34 @@ body .blokk-xl {
 .nav-dagvelger .DayPicker .DayPicker-Day--outside {
   background-color: transparent;
 }
+.nav-dagvelger .DayPicker .DayPicker-Day--today {
+  color: #0067C5;
+}
 .nav-dagvelger .DayPicker .DayPicker-Day:last-child {
   color: #e79999 !important;
 }
 .nav-dagvelger .DayPicker-WeekNumber {
   border-right: none;
   position: relative;
-  padding-right: 0.9rem;
+  padding-left: 0;
+  padding-right: 1rem;
+  font-size: 0.8rem;
 }
-.nav-dagvelger .DayPicker-WeekNumber:after {
+.nav-dagvelger .DayPicker-WeekNumber:focus {
+  outline: none;
+  position: relative;
+}
+.nav-dagvelger .DayPicker-WeekNumber:focus:after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: -0.5rem;
+  bottom: 2px;
+  right: 0.55rem;
+  border: 1px solid #FFBD66;
+  border-radius: 2px;
+}
+.nav-dagvelger .DayPicker-WeekNumber:before {
   content: '';
   width: 1px;
   height: 100%;

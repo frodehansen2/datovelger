@@ -87,12 +87,6 @@ class Dagvelger extends React.Component<Props, State> {
 		this.props.onChange(date);
 	}
 
-	onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-			// e.preventDefault(); // Ikke scroll siden
-		}
-	}
-
 	render() {
 		const { visKalenderikon = true } = this.props;
 		return (
@@ -121,14 +115,18 @@ class Dagvelger extends React.Component<Props, State> {
 					/>
 				</div>
 				<DayPicker
+					canChangeMonth={false}
 					locale="no"
 					selectedDays={this.props.dato || new Date()}
 					onDayClick={this.onDayClick}
 					firstDayOfWeek={1}
 					showWeekNumbers={true}
 					showWeekDays={true}
-					onKeyDown={this.onKeyDown}
 					showOutsideDays={false}
+					onWeekClick={undefined}
+					modifiers={{
+						termin: new Date(2018, 2, 23)
+					}}
 					{...mapProps(this.props)}
 				/>
 			</div>
