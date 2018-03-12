@@ -21,6 +21,12 @@
     "@types/react" "*"
     moment ">=2.17.1"
 
+"@types/react-day-picker@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@types/react-day-picker/-/react-day-picker-5.3.0.tgz#10e931f8f1d8585f62ee47d210f708750789cbfe"
+  dependencies:
+    react-day-picker "*"
+
 "@types/react-dom@^15.5.7":
   version "15.5.7"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-15.5.7.tgz#a5c1c8b315e925d84d59db5ee88ca7e31c5030f9"
@@ -5001,7 +5007,7 @@ prop-types-exact@^1.1.1:
     has "^1.0.1"
     object.assign "^4.1.0"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -5154,6 +5160,12 @@ react-dates@^16.3.6:
     react-portal "^4.1.2"
     react-with-styles "^3.1.0"
     react-with-styles-interface-css "^4.0.1"
+
+react-day-picker@*, react-day-picker@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-7.1.2.tgz#9d6889c391dedc1665056882f06d237b5fb6cd41"
+  dependencies:
+    prop-types "^15.6.1"
 
 react-dev-utils@4.2.1:
   version "4.2.1"

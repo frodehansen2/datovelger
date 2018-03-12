@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import './styles/index.css';
 import { DatovelgerAvgrensninger } from './components/datovelger/types';
 import { validerDato } from './components/datovelger/datovalidering';
+import Dagvelger from './components/dagvelger/Dagvelger';
 
 interface Props {}
 
@@ -96,6 +97,14 @@ class App extends React.Component<Props, State> {
 								onChange={this.oppdaterDato}
 								avgrensninger={this.state.avgrensninger}
 							/>
+							<hr />
+							<Dagvelger
+								id="dagvelger"
+								dato={this.state.dato}
+								onChange={this.oppdaterDato}
+								avgrensninger={this.state.avgrensninger}
+							/>
+							<hr />
 						</div>
 						<p>Valgt dato: {valgtDato}</p>
 						<p>Input-verdi: {this.state.inputValue}</p>

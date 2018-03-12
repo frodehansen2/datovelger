@@ -1,0 +1,114 @@
+@import '_variabler.less';
+@import '_mixins.less';
+
+.dayZindexFix() {
+	z-index: 2;
+	position: relative;
+	border-radius: 2px !important;
+}
+
+.DayPicker() {
+	.DayPicker:not(.DayPicker--interactionDisabled) {
+		.DayPicker-Day {
+			&:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+				&:active {
+					background-color: @navBla !important;
+					color: @white;
+				}
+				&:hover {
+					.hoverOutline();
+					.dayZindexFix();
+					&:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside) {
+						background-color: inherit;
+					}
+				}
+				&:active,
+				&:focus {
+					.focusOutline();
+					.dayZindexFix();
+					background: @white;
+					z-index: 3;
+				}
+			}
+			&.DayPicker-Day--disabled,
+			.DayPicker-Day--outside {
+				&:focus {
+					.focusOutline--disabled();
+					.dayZindexFix();
+				}
+			}
+		}
+	}
+	.DayPicker {
+		.DayPicker-Day {
+			border-radius: 0;
+			border-radius: 0 !important;
+			&--selected:not(.DayPicker-Day--disabled) {
+				color: @white;
+				background-color: @navBla !important;
+			}
+			&--disabled  {
+				color: @navGra40;
+				background-color: @c-blockedDays;
+			}
+			&--outside {
+				background-color: transparent;
+			}
+			&:last-child {
+				color: @navRodLighten60 !important;
+			}
+		}
+		&-WeekNumber {
+			border-right: none;
+			position: relative;
+			padding-right: 0.9rem;
+			&:after {
+				content: '';
+				width: 1px;
+				height: 100%;
+				top: 0;
+				right: 0.5rem;
+				background-color: @navGra20;
+				position: absolute;
+			}
+		}
+	}
+}
+.nav-dagvelger {
+	@input-width: 11rem;
+	&__inputContainer {
+		display: inline-block;
+		width: @input-width;
+		position: relative;
+	}
+	&__kalenderikon {
+		@borderRadius: 0 4px 4px 0;
+		background-color: @white;
+		border: 1px solid #0067c5;
+		border-radius: @borderRadius;
+		padding: 9px 9px 9px 9px;
+		margin: 0;
+		height: @inputHeight;
+		z-index: 2;
+		position: absolute;
+		right: 0;
+		> svg {
+			width: 16px;
+			height: 16px;
+			transform: translateY(2px);
+		}
+		&:active,
+		&:hover,
+		&:focus {
+			outline: none;
+		}
+	}
+	&__input {
+		.inputStyling();
+		width: 100%;
+		padding-right: 3rem;
+		height: @inputHeight;
+	}
+
+	.DayPicker();
+}
