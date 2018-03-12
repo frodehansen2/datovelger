@@ -19,6 +19,7 @@ import DayPicker, {
 import '../../../node_modules/react-day-picker/lib/style.css';
 import KalenderIkon from './KalenderIkon';
 import Navbar from './Navbar';
+import { validerDato, DatoValideringsfeil } from './datovalidering';
 
 interface State {
 	month?: Date | undefined;
@@ -32,7 +33,12 @@ export interface Props {
 	/** Avgrensninger på hvilke datoer som er gyldig og ikke */
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Funksjon som kalles når gyldig dato velges */
-	onChange: (date: Date | null, inputValue?: string) => void;
+	onChange: (date: Date) => void;
+	/** Funksjon som kalles når gyldig dato velges */
+	onUnavailableDateClick?: (
+		date: Date,
+		validering?: DatoValideringsfeil
+	) => void;
 	/** Språk - default no */
 	locale?: 'no';
 	/** Om ukenumre skal vises - default false */
@@ -88,6 +94,14 @@ class Dagvelger extends React.Component<Props, State> {
 	}
 
 	onDayClick(date: Date) {
+		const { avgrensninger, onUnavailableDateClick } = this.props;
+		if (onUnavailableDateClick && avgrensninger) {
+			const datovalidering = validerDato(date, avgrensninger);
+			if (datovalidering !== undefined) {
+				onUnavailableDateClick(date, datovalidering);
+				return;
+			}
+		}
 		this.props.onChange(date);
 	}
 

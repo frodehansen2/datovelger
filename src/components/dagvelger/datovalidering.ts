@@ -2,13 +2,18 @@ import * as moment from 'moment';
 import { normaliserDato } from './utils';
 import { DatovelgerAvgrensninger, DatovelgerTidsperiode } from './types';
 
-type DatoValideringsfeil =
+export type DatoValideringsfeil =
 	| 'udefinert'
 	| 'ugyldigDato'
 	| 'datoErFørMinDato'
 	| 'datoErEtterMaksDato'
 	| 'datoErIkkeUkedag'
 	| 'datoErIUgyldigPeriode';
+
+export const erDatoGyldig = (
+	dato: Date | string | null | undefined,
+	avgrensninger: DatovelgerAvgrensninger
+) => validerDato(dato, avgrensninger) !== undefined;
 
 export const validerDato = (
 	dato: Date | string | null | undefined,
@@ -38,8 +43,7 @@ export const validerDato = (
 	if (erDatoITidsperioder(dato, avgrensninger.ugyldigeTidsperioder)) {
 		return 'datoErIUgyldigPeriode';
 	}
-
-	return;
+	return undefined;
 };
 
 export const datoErDefinert = (dato: Date) =>

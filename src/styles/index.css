@@ -1734,6 +1734,8 @@ body .blokk-xl {
 .nav-dagvelger .DayPicker .DayPicker-Day {
   border-radius: 0;
   border-radius: 0 !important;
+  padding-left: 0.6em;
+  padding-right: 0.6em;
 }
 .nav-dagvelger .DayPicker .DayPicker-Day--selected:not(.DayPicker-Day--disabled) {
   color: #FFF;
