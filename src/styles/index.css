@@ -1448,6 +1448,7 @@ body .blokk-xl {
   border-radius: 4px;
   border: 1px solid #B7B1A9;
   box-sizing: border-box;
+  font-size: 1rem;
   height: 40px;
 }
 .DateInput_input:focus {
@@ -1576,7 +1577,21 @@ body .blokk-xl {
   width: 11rem;
   position: relative;
 }
-.nav-dagvelger__kalenderikon {
+.nav-dagvelger__kalenderknapp {
+  display: inline-block;
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 1em;
+  white-space: nowrap;
+  border-radius: 0.125em;
+  cursor: pointer;
+  user-select: none;
+  letter-spacing: 0.0625em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  background-color: transparent;
+  padding: calc(.5em - 2px) calc(2.5em - 2px) calc(.625em - 2px) calc(2.5em - 2px);
   background-color: #FFF;
   border: 1px solid #0067c5;
   border-radius: 0 4px 4px 0;
@@ -1587,15 +1602,25 @@ body .blokk-xl {
   position: absolute;
   right: 0;
 }
-.nav-dagvelger__kalenderikon > svg {
+.nav-dagvelger__kalenderknapp:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #FFBD66;
+}
+.nav-dagvelger__kalenderknapp > svg {
   width: 16px;
   height: 16px;
   transform: translateY(2px);
 }
-.nav-dagvelger__kalenderikon:active,
-.nav-dagvelger__kalenderikon:hover,
-.nav-dagvelger__kalenderikon:focus {
+.nav-dagvelger__kalenderknapp:active,
+.nav-dagvelger__kalenderknapp:hover,
+.nav-dagvelger__kalenderknapp:focus {
   outline: none;
+}
+.nav-dagvelger__caption {
+  padding: 0 2rem;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 2rem;
 }
 .nav-dagvelger__input {
   padding: 0.45rem;

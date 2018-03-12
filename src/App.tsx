@@ -99,10 +99,13 @@ class App extends React.Component<Props, State> {
 							/>
 							<hr />
 							<Dagvelger
-								id="dagvelger"
-								dato={this.state.dato}
-								onChange={(d: Date) => this.oppdaterDato(d, '')}
+								dato={this.state.dato || new Date()}
+								velgDag={(d: Date) => this.oppdaterDato(d, '')}
 								avgrensninger={this.state.avgrensninger}
+								inputProps={{
+									id: 'hwoa',
+									placeholder: 'dd.mm.åååå'
+								}}
 								onUnavailableDateClick={(d, validering) => {
 									console.log('Ugyldig dato', d, validering);
 								}}

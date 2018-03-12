@@ -17,7 +17,7 @@ export interface Props extends React.Props<any> {
 	tabIndex?: number;
 }
 
-class DOMEventContainer extends React.Component<Props, {}> {
+class DomEventContainer extends React.Component<Props, {}> {
 	domElement: HTMLDivElement | null;
 	ignoreDocumentClick: boolean;
 
@@ -114,4 +114,4 @@ class DOMEventContainer extends React.Component<Props, {}> {
 	}
 }
 
-export default DOMEventContainer;
+export default DomEventContainer;
