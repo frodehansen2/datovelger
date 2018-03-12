@@ -1704,6 +1704,12 @@ body .blokk-xl {
 .nav-dagvelger .DayPicker .DayPicker-Day:last-child {
   color: #e79999 !important;
 }
+.nav-dagvelger .DayPicker-Weekday {
+  text-transform: capitalize;
+}
+.nav-dagvelger .DayPicker-Weekday:after {
+  content: '.';
+}
 .nav-dagvelger .DayPicker-WeekNumber {
   border-right: none;
   position: relative;

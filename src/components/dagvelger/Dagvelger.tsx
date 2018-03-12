@@ -1,9 +1,11 @@
 import * as React from 'react';
 // import Chevron from 'nav-frontend-chevron';
 import * as classnames from 'classnames';
-
 import { DatovelgerAvgrensninger } from './types';
 import { normaliserDato } from './utils';
+
+/** Denner foreløpig ikke registert riktig i forhold til typings */
+const localeUtils = require('react-day-picker/moment');
 
 import DayPicker, {
 	DayPickerProps,
@@ -14,11 +16,7 @@ import DayPicker, {
 	DaysOfWeekModifier
 } from 'react-day-picker';
 import '../../../node_modules/react-day-picker/lib/style.css';
-
-// import './styles/datovelger.less';
 import KalenderIkon from './KalenderIkon';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 
 export interface Props {
 	/** identifikator */
@@ -29,12 +27,10 @@ export interface Props {
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Funksjon som kalles når gyldig dato velges */
 	onChange: (date: Date | null, inputValue?: string) => void;
-	/** Default true */
-	visKalenderikon?: boolean;
-}
-
-interface State {
-	dato: Moment | null;
+	/** Språk - default no */
+	locale?: 'no';
+	/** Om ukenumre skal vises - default false */
+	visUkenumre?: boolean;
 }
 
 const mapProps = (props: Props): DayPickerProps => {
@@ -71,16 +67,13 @@ const mapProps = (props: Props): DayPickerProps => {
 	return {};
 };
 
-class Dagvelger extends React.Component<Props, State> {
+class Dagvelger extends React.Component<Props> {
 	divContainer: HTMLDivElement | null;
 	input: HTMLInputElement | null;
 
 	constructor(props: Props) {
 		super(props);
 		this.onDayClick = this.onDayClick.bind(this);
-		this.state = {
-			dato: props.dato ? moment(normaliserDato(props.dato)) : null
-		};
 	}
 
 	onDayClick(date: Date) {
@@ -88,26 +81,23 @@ class Dagvelger extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { visKalenderikon = true } = this.props;
+		const { dato, locale = 'no', visUkenumre = false } = this.props;
 		return (
 			<div
-				className={classnames('nav-dagvelger', {
-					'nav-dagvelger--medKalenderikon': visKalenderikon
-				})}
+				className={classnames('nav-dagvelger')}
 				ref={(c) => (this.divContainer = c)}
 			>
 				<div className="nav-dagvelger__inputContainer blokk-s">
-					{visKalenderikon && (
-						<button
-							type="button"
-							className="nav-dagvelger__kalenderikon"
-							role="presentation"
-							aria-hidden="true"
-							tabIndex={-1}
-						>
-							<KalenderIkon />
-						</button>
-					)}
+					<button
+						type="button"
+						className="nav-dagvelger__kalenderikon"
+						role="presentation"
+						aria-hidden="true"
+						tabIndex={-1}
+					>
+						<KalenderIkon />
+					</button>
+
 					<input
 						className="nav-dagvelger__input"
 						type="text"
@@ -115,12 +105,13 @@ class Dagvelger extends React.Component<Props, State> {
 					/>
 				</div>
 				<DayPicker
+					locale={locale}
+					localeUtils={localeUtils}
 					canChangeMonth={false}
-					locale="no"
-					selectedDays={this.props.dato || new Date()}
+					selectedDays={dato || new Date()}
 					onDayClick={this.onDayClick}
 					firstDayOfWeek={1}
-					showWeekNumbers={true}
+					showWeekNumbers={visUkenumre}
 					showWeekDays={true}
 					showOutsideDays={false}
 					onWeekClick={undefined}
