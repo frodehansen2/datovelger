@@ -1509,17 +1509,19 @@ body .blokk-xl {
   color: #e79999 !important;
 }
 .nav-datovelger {
+  position: relative;
   /** Justering på grunn av at chevron ikke sentreres vertikalt */
 }
 .nav-datovelger__kalenderikon {
   background-color: #FFF;
   border: 1px solid #0067c5;
-  border-radius: 4px 0 0 4px;
+  border-radius: 0 4px 4px 0;
   padding: 9px 9px 9px 9px;
   margin: 0;
   height: 40px;
   z-index: 2;
   position: absolute;
+  right: 0;
 }
 .nav-datovelger__kalenderikon > svg {
   width: 16px;
@@ -1531,11 +1533,14 @@ body .blokk-xl {
 .nav-datovelger__kalenderikon:focus {
   outline: none;
 }
+.nav-datovelger--medKalenderikon {
+  width: 11rem;
+}
 .nav-datovelger--medKalenderikon .DateInput {
   width: 11rem;
 }
 .nav-datovelger--medKalenderikon .DateInput_input {
-  padding-left: 3rem;
+  padding-right: 3rem;
 }
 .nav-datovelger__chevron {
   display: inline-block;
@@ -1930,6 +1935,9 @@ GRID
   color: #121212;
   border-radius: 10px;
   padding: 50px;
+}
+.datovelger .nav-datovelger {
+  margin: 0 auto;
 }
 .datonav {
   display: flex;

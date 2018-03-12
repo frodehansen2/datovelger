@@ -3,8 +3,9 @@
 @import '_react-dates-overrides.less';
 
 .nav-datovelger {
+	position: relative;
 	&__kalenderikon {
-		@borderRadius: 4px 0 0 4px;
+		@borderRadius: 0 4px 4px 0;
 		background-color: @white;
 		border: 1px solid #0067c5;
 		border-radius: @borderRadius;
@@ -13,6 +14,7 @@
 		height: @inputHeight;
 		z-index: 2;
 		position: absolute;
+		right: 0;
 		> svg {
 			width: 16px;
 			height: 16px;
@@ -25,11 +27,12 @@
 		}
 	}
 	&--medKalenderikon {
+		width: 11rem;
 		.DateInput {
 			width: 11rem;
 		}
 		.DateInput_input {
-			padding-left: 3rem;
+			padding-right: 3rem;
 		}
 	}
 	/** Justering på grunn av at chevron ikke sentreres vertikalt */
