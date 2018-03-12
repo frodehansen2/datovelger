@@ -1,6 +1,7 @@
 import * as React from 'react';
 // import Chevron from 'nav-frontend-chevron';
 import * as classnames from 'classnames';
+import * as moment from 'moment';
 import { DatovelgerAvgrensninger } from './types';
 import { normaliserDato } from './utils';
 
@@ -17,12 +18,17 @@ import DayPicker, {
 } from 'react-day-picker';
 import '../../../node_modules/react-day-picker/lib/style.css';
 import KalenderIkon from './KalenderIkon';
+import Navbar from './Navbar';
+
+interface State {
+	month?: Date | undefined;
+}
 
 export interface Props {
 	/** identifikator */
 	id: string;
 	/** Valgt dato */
-	dato: Date | null;
+	dato?: Date | null;
 	/** Avgrensninger på hvilke datoer som er gyldig og ikke */
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Funksjon som kalles når gyldig dato velges */
@@ -67,21 +73,63 @@ const mapProps = (props: Props): DayPickerProps => {
 	return {};
 };
 
-class Dagvelger extends React.Component<Props> {
+class Dagvelger extends React.Component<Props, State> {
 	divContainer: HTMLDivElement | null;
 	input: HTMLInputElement | null;
 
 	constructor(props: Props) {
 		super(props);
 		this.onDayClick = this.onDayClick.bind(this);
+		this.onForrigeMånedClick = this.onForrigeMånedClick.bind(this);
+		this.onNesteMånedClick = this.onNesteMånedClick.bind(this);
+		this.state = {
+			month: props.dato || new Date()
+		};
 	}
 
 	onDayClick(date: Date) {
 		this.props.onChange(date);
 	}
 
+	onForrigeMånedClick(evt: React.MouseEvent<HTMLButtonElement>) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		const mnd = moment(this.state.month)
+			.add(-1, 'months')
+			.toDate();
+		this.setState({
+			month: mnd
+		});
+	}
+
+	onNesteMånedClick(evt: React.MouseEvent<HTMLButtonElement>) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		const mnd = moment(this.state.month)
+			.add(1, 'months')
+			.toDate();
+		this.setState({
+			month: mnd
+		});
+	}
+
 	render() {
-		const { dato, locale = 'no', visUkenumre = false } = this.props;
+		const {
+			dato,
+			locale = 'no',
+			visUkenumre = false,
+			avgrensninger
+		} = this.props;
+
+		const kanGåTilForrigeMåned =
+			avgrensninger &&
+			avgrensninger.minDato &&
+			moment(this.state.month).isAfter(avgrensninger.minDato);
+		const kanGåTilNesteMåned =
+			avgrensninger &&
+			avgrensninger.maksDato &&
+			moment(this.state.month).isBefore(avgrensninger.maksDato);
+
 		return (
 			<div
 				className={classnames('nav-dagvelger')}
@@ -97,7 +145,6 @@ class Dagvelger extends React.Component<Props> {
 					>
 						<KalenderIkon />
 					</button>
-
 					<input
 						className="nav-dagvelger__input"
 						type="text"
@@ -107,7 +154,21 @@ class Dagvelger extends React.Component<Props> {
 				<DayPicker
 					locale={locale}
 					localeUtils={localeUtils}
-					canChangeMonth={false}
+					navbarElement={
+						<Navbar
+							forrige={{
+								label: 'Gå til forrige måned',
+								disabled: !kanGåTilForrigeMåned,
+								onClick: this.onForrigeMånedClick
+							}}
+							neste={{
+								label: 'Gå til forrige måned',
+								disabled: !kanGåTilNesteMåned,
+								onClick: this.onNesteMånedClick
+							}}
+						/>
+					}
+					month={this.state.month}
 					selectedDays={dato || new Date()}
 					onDayClick={this.onDayClick}
 					firstDayOfWeek={1}
@@ -115,9 +176,6 @@ class Dagvelger extends React.Component<Props> {
 					showWeekDays={true}
 					showOutsideDays={false}
 					onWeekClick={undefined}
-					modifiers={{
-						termin: new Date(2018, 2, 23)
-					}}
 					{...mapProps(this.props)}
 				/>
 			</div>

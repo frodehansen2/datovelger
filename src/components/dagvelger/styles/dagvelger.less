@@ -67,6 +67,11 @@
 				content: '.';
 			}
 		}
+		&-Caption  {
+			padding: 0 2rem;
+			text-align: center;
+			text-transform: capitalize;
+		}
 		&-WeekNumber {
 			border-right: none;
 			position: relative;
@@ -133,6 +138,36 @@
 		width: 100%;
 		padding-right: 3rem;
 		height: @inputHeight;
+	}
+	&__navbar {
+		position: absolute;
+		left: 0.6rem;
+		right: 0.6rem;
+		top: 0.6rem;
+		&__knapp {
+			.knappbase-mixin(inherit);
+			position: absolute;
+			border: none;
+			padding-left: 0.3rem;
+			padding-right: 0.3rem;
+			margin-top: 1px;
+			&[disabled] {
+				cursor: default;
+				opacity: 0.4;
+			}
+			&:not([disabled]) {
+				&:hover {
+					.hoverOutline();
+				}
+				&:focus,
+				&:active {
+					.focusOutline();
+				}
+			}
+			&--neste {
+				right: 0;
+			}
+		}
 	}
 
 	.DayPicker();
