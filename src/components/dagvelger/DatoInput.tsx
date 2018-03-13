@@ -84,6 +84,9 @@ export class DatoInput extends React.Component<Props, State> {
 		return (
 			<input
 				{...inputProps}
+				autoComplete="off"
+				autoCorrect="off"
+				pattern="dd.dd.dddd"
 				type="tel"
 				ref={(c) => (this.input = c)}
 				value={this.state.value}

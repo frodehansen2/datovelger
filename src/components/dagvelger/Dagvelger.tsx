@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
+import { guid } from 'nav-frontend-js-utils';
+
 import { DatovelgerAvgrensninger } from './types';
 import {
 	normaliserDato,
@@ -25,9 +27,11 @@ import KalenderKnapp from './elementer/KalenderKnapp';
 import DomEventContainer from '../DomEventContainer';
 import DatoInput from './DatoInput';
 import AktivManed from './elementer/AktivManed';
+import AvgrensningerInfo from './elementer/AvgrensningerInfo';
 
 interface State {
 	måned: Date;
+	datovalidering: DatoValidering;
 	erÅpen?: boolean;
 	statusMessage: string;
 }
@@ -39,9 +43,10 @@ export interface Props {
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Kalles når en dato velges */
 	velgDag: (date: Date) => void;
+	/** Påkrevd id til inputfelt */
+	inputId: string;
 	/** Input props */
 	inputProps?: {
-		id: string;
 		placeholder?: string;
 		required?: boolean;
 		ariaDescribedby?: string;
@@ -90,17 +95,25 @@ const mapProps = (props: Props): DayPickerProps => {
 
 class Dagvelger extends React.Component<Props, State> {
 	input: DatoInput | null;
+	id: string;
 
 	constructor(props: Props) {
 		super(props);
+
+		this.id = guid();
+
 		this.onVelgDag = this.onVelgDag.bind(this);
 		this.onByttMåned = this.onByttMåned.bind(this);
-		this.onDatoInputChange = this.onDatoInputChange.bind(this);
+		this.onDatoDateChange = this.onDatoDateChange.bind(this);
 		this.toggleKalender = this.toggleKalender.bind(this);
 		this.lukkKalender = this.lukkKalender.bind(this);
 		this.validerDato = this.validerDato.bind(this);
+
 		this.state = {
 			måned: props.dato || new Date(),
+			datovalidering: props.dato
+				? this.validerDato(props.dato)
+				: 'datoErIkkeDefinert',
 			erÅpen: false,
 			statusMessage: ''
 		};
@@ -122,7 +135,8 @@ class Dagvelger extends React.Component<Props, State> {
 		if (datovalidering === 'gyldig') {
 			this.setState({
 				statusMessage: `Valgt dag: ${formatDateInputValue(dato)}`,
-				erÅpen: false
+				erÅpen: false,
+				datovalidering
 			});
 			if (this.input) {
 				this.input.focus();
@@ -130,19 +144,22 @@ class Dagvelger extends React.Component<Props, State> {
 			this.props.velgDag(dato);
 		} else if (this.props.ugyldigDagValgt) {
 			this.props.ugyldigDagValgt(dato, datovalidering);
+			this.setState({ datovalidering });
 		}
 	}
 
-	onDatoInputChange(dato: Date) {
+	onDatoDateChange(dato: Date) {
 		const datovalidering = this.validerDato(dato);
 		if (datovalidering === 'gyldig') {
 			this.setState({
 				statusMessage: `Valgt dag: ${formatDateInputValue(dato)}`,
-				erÅpen: false
+				erÅpen: false,
+				datovalidering
 			});
 			this.props.velgDag(dato);
 		} else if (this.props.ugyldigDagValgt) {
 			this.props.ugyldigDagValgt(dato, datovalidering);
+			this.setState({ datovalidering });
 		}
 	}
 
@@ -163,12 +180,14 @@ class Dagvelger extends React.Component<Props, State> {
 	render() {
 		const {
 			dato = new Date(),
+			inputId,
 			locale = 'no',
 			visUkenumre = false,
-			inputProps
+			inputProps,
+			avgrensninger
 		} = this.props;
 
-		const { måned, erÅpen } = this.state;
+		const { måned, erÅpen, datovalidering } = this.state;
 
 		const localeUtils = {
 			...momentLocaleUtils,
@@ -193,15 +212,30 @@ class Dagvelger extends React.Component<Props, State> {
 			showWeekNumbers: visUkenumre
 		};
 
+		const avgrensningerInfoId = avgrensninger ? `${this.id}_srDesc` : undefined;
+		const invalidDate = datovalidering !== 'gyldig';
+
 		return (
 			<DomEventContainer onBlur={() => this.lukkKalender()}>
 				<div className={classnames('nav-dagvelger')}>
+					{avgrensninger &&
+						avgrensningerInfoId && (
+							<AvgrensningerInfo
+								id={avgrensningerInfoId}
+								avgrensninger={avgrensninger}
+							/>
+						)}
 					<div className="nav-dagvelger__inputContainer blokk-s">
 						<DatoInput
 							{...inputProps}
+							inputProps={{
+								id: inputId,
+								'aria-invalid': invalidDate,
+								'aria-describedby': avgrensningerInfoId
+							}}
 							ref={(c) => (this.input = c)}
 							date={this.props.dato}
-							onDateChange={this.onDatoInputChange}
+							onDateChange={this.onDatoDateChange}
 						/>
 						<KalenderKnapp
 							onToggle={this.toggleKalender}

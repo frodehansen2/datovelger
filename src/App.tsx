@@ -22,7 +22,6 @@ class App extends React.Component<Props, State> {
 		super(props);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.oppdaterDato = this.oppdaterDato.bind(this);
-		this.onClose = this.onClose.bind(this);
 		this.addDay = this.addDay.bind(this);
 		this.state = {
 			dato: null,
@@ -52,16 +51,11 @@ class App extends React.Component<Props, State> {
 		alert('Valgt dato er: ' + this.state.dato);
 	}
 
-	oppdaterDato(dato: Date | null, inputValue: string) {
+	oppdaterDato(dato: Date | null) {
 		this.setState({
 			dato,
-			inputValue,
-			error: validerDato(dato || inputValue, this.state.avgrensninger)
+			error: validerDato(dato, this.state.avgrensninger)
 		});
-	}
-
-	onClose(dato: Date, inputValue: string) {
-		console.log('App.onBlur', dato, `[${inputValue}]`);
 	}
 
 	addDay(days: number) {
@@ -83,38 +77,25 @@ class App extends React.Component<Props, State> {
 				<div className="App__content">
 					<h1>Datovelger basert på Airbnb react-dates </h1>
 					<form action="#" onSubmit={this.handleSubmit}>
-						<p>
-							Min dato:{' '}
-							{moment(this.state.avgrensninger.minDato).toLocaleString()}
-						</p>
-						<p>
-							Maks dato:{' '}
-							{moment(this.state.avgrensninger.maksDato).toLocaleString()}
-						</p>
 						<div className="datovelger">
-							{/* <Datovelger
-								id="datovelger"
-								dato={this.state.dato}
-								onChange={this.oppdaterDato}
-								avgrensninger={this.state.avgrensninger}
-							/> */}
-							<hr />
+							<div className="blokk-s">
+								<label htmlFor="datoinput">Velg dato</label>
+							</div>
 							<Dagvelger
+								inputId="datoinput"
 								dato={this.state.dato || new Date()}
-								velgDag={(d: Date) => this.oppdaterDato(d, '')}
+								velgDag={(d: Date) => this.oppdaterDato(d)}
 								avgrensninger={this.state.avgrensninger}
 								inputProps={{
-									id: 'hwoa',
 									placeholder: 'dd.mm.åååå'
 								}}
 								ugyldigDagValgt={(d, validering) => {
-									console.log('Ugyldig dato', d, validering);
+									this.oppdaterDato(d);
 								}}
 							/>
 							<hr />
 						</div>
 						<p>Valgt dato: {valgtDato}</p>
-						<p>Input-verdi: {this.state.inputValue}</p>
 						<p>Validering: {this.state.error}</p>
 						<button type="submit" className="okButton">
 							Ok
