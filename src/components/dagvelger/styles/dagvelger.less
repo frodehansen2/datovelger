@@ -58,7 +58,7 @@
 			margin-top: 1px;
 			&[disabled] {
 				cursor: default;
-				opacity: 0.4;
+				opacity: 0;
 			}
 			&:not([disabled]) {
 				&:hover {
@@ -68,6 +68,9 @@
 				&:active {
 					.focusOutline();
 				}
+			}
+			&--forrige {
+				left: 0;
 			}
 			&--neste {
 				right: 0;

@@ -1,9 +1,11 @@
 import * as React from 'react';
-// import Chevron from 'nav-frontend-chevron';
 import * as classnames from 'classnames';
-import * as moment from 'moment';
 import { DatovelgerAvgrensninger } from './types';
-import { normaliserDato } from './utils';
+import {
+	normaliserDato,
+	formaterDayAriaLabel,
+	formatDateInputValue
+} from './utils';
 
 /** Denner foreløpig ikke registert riktig i forhold til typings */
 const momentLocaleUtils = require('react-day-picker/moment');
@@ -18,17 +20,16 @@ import DayPicker, {
 } from 'react-day-picker';
 import '../../../node_modules/react-day-picker/lib/style.css';
 import Navbar from './Navbar';
-import { validerDato, DatoValideringsfeil } from './datovalidering';
+import { validerDato, DatoValidering } from './utils/datovalidering';
 import KalenderKnapp from './elementer/KalenderKnapp';
 import DomEventContainer from '../DomEventContainer';
 import DatoInput from './DatoInput';
 import AktivManed from './elementer/AktivManed';
 
 interface State {
-	måned?: Date | undefined;
+	måned: Date;
 	erÅpen?: boolean;
 	statusMessage: string;
-	inputValue: string;
 }
 
 export interface Props {
@@ -42,12 +43,10 @@ export interface Props {
 	inputProps?: {
 		id: string;
 		placeholder?: string;
+		required?: boolean;
 	};
 	/** Kalles når en ikke lovlig dato velges */
-	onUnavailableDateClick?: (
-		date: Date,
-		validering?: DatoValideringsfeil
-	) => void;
+	ugyldigDagValgt?: (date: Date, validering?: DatoValidering) => void;
 	/** Språk - default no */
 	locale?: 'no';
 	/** Om ukenumre skal vises - default false */
@@ -94,49 +93,61 @@ class Dagvelger extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.onDayClick = this.onDayClick.bind(this);
-		this.onMånedClick = this.onMånedClick.bind(this);
+		this.onByttMåned = this.onByttMåned.bind(this);
+		this.onDatoInputChange = this.onDatoInputChange.bind(this);
 		this.toggleKalender = this.toggleKalender.bind(this);
-		this.nesteMånedTilgjengelig = this.nesteMånedTilgjengelig.bind(this);
-		this.forrigeMånedTilgjengelig = this.forrigeMånedTilgjengelig.bind(this);
 		this.lukkKalender = this.lukkKalender.bind(this);
-		this.formaterDayAriaLabel = this.formaterDayAriaLabel.bind(this);
-		this.erDagTilgjengelig = this.erDagTilgjengelig.bind(this);
+		this.validerDato = this.validerDato.bind(this);
 		this.state = {
 			måned: props.dato || new Date(),
 			erÅpen: true,
-			statusMessage: '',
-			inputValue: ''
+			statusMessage: ''
 		};
 	}
 
-	onDayClick(date: Date) {
-		const { avgrensninger, onUnavailableDateClick } = this.props;
-		if (onUnavailableDateClick && avgrensninger) {
-			const datovalidering = validerDato(date, avgrensninger);
-			if (datovalidering !== undefined) {
-				onUnavailableDateClick(date, datovalidering);
-				return;
-			}
-		}
-		this.setState({
-			statusMessage: `Valgt dag: ${moment(date).format('DD.MM.YYYY')}`,
-			erÅpen: false,
-			inputValue: moment(date).format('DD.MM.YYYY')
-		});
-		if (this.input) {
-			this.input.focus();
-		}
-		this.props.velgDag(date);
+	componentWillReceiveProps(nextProps: Props) {
+		console.log(nextProps);
 	}
 
-	onMånedClick(evt: React.MouseEvent<HTMLButtonElement>, retning: -1 | 1) {
-		evt.preventDefault();
-		evt.stopPropagation();
-		const mnd = moment(this.state.måned)
-			.add(retning, 'months')
-			.toDate();
+	validerDato(dato: Date): DatoValidering {
+		if (this.props.avgrensninger) {
+			return validerDato(dato, this.props.avgrensninger);
+		}
+		return 'gyldig';
+	}
+
+	onDayClick(dato: Date) {
+		const datovalidering = this.validerDato(dato);
+		if (datovalidering === 'gyldig') {
+			this.setState({
+				statusMessage: `Valgt dag: ${formatDateInputValue(dato)}`,
+				erÅpen: false
+			});
+			if (this.input) {
+				this.input.focus();
+			}
+			this.props.velgDag(dato);
+		} else if (this.props.ugyldigDagValgt) {
+			this.props.ugyldigDagValgt(dato, datovalidering);
+		}
+	}
+
+	onDatoInputChange(dato: Date) {
+		const datovalidering = this.validerDato(dato);
+		if (datovalidering === 'gyldig') {
+			this.setState({
+				statusMessage: `Valgt dag: ${formatDateInputValue(dato)}`,
+				erÅpen: false
+			});
+			this.props.velgDag(dato);
+		} else if (this.props.ugyldigDagValgt) {
+			this.props.ugyldigDagValgt(dato, datovalidering);
+		}
+	}
+
+	onByttMåned(måned: Date) {
 		this.setState({
-			måned: mnd
+			måned
 		});
 	}
 
@@ -144,38 +155,8 @@ class Dagvelger extends React.Component<Props, State> {
 		this.setState({ erÅpen: !this.state.erÅpen });
 	}
 
-	forrigeMånedTilgjengelig() {
-		return (
-			this.props.avgrensninger &&
-			this.props.avgrensninger.minDato &&
-			moment(this.state.måned).isAfter(this.props.avgrensninger.minDato)
-		);
-	}
-
-	nesteMånedTilgjengelig() {
-		return (
-			this.props.avgrensninger &&
-			this.props.avgrensninger.maksDato &&
-			moment(this.state.måned).isBefore(this.props.avgrensninger.maksDato)
-		);
-	}
-
 	lukkKalender() {
 		this.setState({ erÅpen: false });
-	}
-
-	erDagTilgjengelig(dato: Date) {
-		return validerDato(dato, this.props.avgrensninger || {}) === undefined;
-	}
-
-	formaterDayAriaLabel(dato: Date, locale: string) {
-		let ariaLabel = moment(dato).format('DD.MM.YYYY (dddd)');
-		if (this.props.avgrensninger) {
-			if (!this.erDagTilgjengelig(dato)) {
-				ariaLabel = ` (ikke tilgjengelig)`;
-			}
-		}
-		return ariaLabel;
 	}
 
 	render() {
@@ -186,36 +167,24 @@ class Dagvelger extends React.Component<Props, State> {
 			inputProps
 		} = this.props;
 
-		const { erÅpen, inputValue } = this.state;
-
-		const navbarElement = (
-			<Navbar
-				forrige={{
-					label: `Gå til ${moment(this.state.måned)
-						.add(-1, 'months')
-						.format('MMMM')}`,
-					disabled: !this.forrigeMånedTilgjengelig(),
-					onClick: (evt) => this.onMånedClick(evt, -1)
-				}}
-				neste={{
-					label: `Gå til ${moment(this.state.måned)
-						.add(1, 'months')
-						.format('MMMM')}`,
-					disabled: !this.nesteMånedTilgjengelig(),
-					onClick: (evt) => this.onMånedClick(evt, 1)
-				}}
-			/>
-		);
+		const { måned, erÅpen } = this.state;
 
 		const localeUtils = {
 			...momentLocaleUtils,
-			formatDay: this.formaterDayAriaLabel
+			formatDay: (d: Date, l: string) =>
+				formaterDayAriaLabel(d, l, this.props.avgrensninger)
 		};
 
 		const innstillinger: DayPickerProps = {
 			locale,
 			localeUtils,
-			navbarElement,
+			navbarElement: (
+				<Navbar
+					måned={måned}
+					byttMåned={(d: Date) => this.onByttMåned(d)}
+					avgrensninger={this.props.avgrensninger}
+				/>
+			),
 			captionElement: (
 				<AktivManed date={dato} locale={locale} localeUtils={localeUtils} />
 			),
@@ -228,9 +197,10 @@ class Dagvelger extends React.Component<Props, State> {
 				<div className={classnames('nav-dagvelger')}>
 					<div className="nav-dagvelger__inputContainer blokk-s">
 						<DatoInput
-							ref={(c) => (this.input = c)}
 							{...inputProps}
-							value={inputValue}
+							ref={(c) => (this.input = c)}
+							date={this.props.dato}
+							onDateChange={this.onDatoInputChange}
 						/>
 						<KalenderKnapp onToggle={this.toggleKalender} />
 					</div>

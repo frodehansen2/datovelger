@@ -16,7 +16,6 @@ import {
 
 import fraserBokmal from './phrases/phrases_nb_NO';
 
-// import './styles/datovelger.less';
 import KalenderIkon from './KalenderIkon';
 
 export interface Props {

@@ -1,11 +1,12 @@
 import * as React from 'react';
-import Datovelger from './components/datovelger/Datovelger';
 import * as moment from 'moment';
 
-import './styles/index.css';
 import { DatovelgerAvgrensninger } from './components/datovelger/types';
 import { validerDato } from './components/datovelger/datovalidering';
+// import Datovelger from './components/datovelger/Datovelger';
 import Dagvelger from './components/dagvelger/Dagvelger';
+
+import './styles/index.css';
 
 interface Props {}
 
@@ -91,12 +92,12 @@ class App extends React.Component<Props, State> {
 							{moment(this.state.avgrensninger.maksDato).toLocaleString()}
 						</p>
 						<div className="datovelger">
-							<Datovelger
+							{/* <Datovelger
 								id="datovelger"
 								dato={this.state.dato}
 								onChange={this.oppdaterDato}
 								avgrensninger={this.state.avgrensninger}
-							/>
+							/> */}
 							<hr />
 							<Dagvelger
 								dato={this.state.dato || new Date()}
@@ -106,7 +107,7 @@ class App extends React.Component<Props, State> {
 									id: 'hwoa',
 									placeholder: 'dd.mm.åååå'
 								}}
-								onUnavailableDateClick={(d, validering) => {
+								ugyldigDagValgt={(d, validering) => {
 									console.log('Ugyldig dato', d, validering);
 								}}
 							/>
