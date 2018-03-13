@@ -44,6 +44,7 @@ export interface Props {
 		id: string;
 		placeholder?: string;
 		required?: boolean;
+		ariaDescribedby?: string;
 	};
 	/** Kalles når en ikke lovlig dato velges */
 	ugyldigDagValgt?: (date: Date, validering?: DatoValidering) => void;
@@ -92,7 +93,7 @@ class Dagvelger extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props);
-		this.onDayClick = this.onDayClick.bind(this);
+		this.onVelgDag = this.onVelgDag.bind(this);
 		this.onByttMåned = this.onByttMåned.bind(this);
 		this.onDatoInputChange = this.onDatoInputChange.bind(this);
 		this.toggleKalender = this.toggleKalender.bind(this);
@@ -100,7 +101,7 @@ class Dagvelger extends React.Component<Props, State> {
 		this.validerDato = this.validerDato.bind(this);
 		this.state = {
 			måned: props.dato || new Date(),
-			erÅpen: true,
+			erÅpen: false,
 			statusMessage: ''
 		};
 	}
@@ -116,7 +117,7 @@ class Dagvelger extends React.Component<Props, State> {
 		return 'gyldig';
 	}
 
-	onDayClick(dato: Date) {
+	onVelgDag(dato: Date) {
 		const datovalidering = this.validerDato(dato);
 		if (datovalidering === 'gyldig') {
 			this.setState({
@@ -202,14 +203,27 @@ class Dagvelger extends React.Component<Props, State> {
 							date={this.props.dato}
 							onDateChange={this.onDatoInputChange}
 						/>
-						<KalenderKnapp onToggle={this.toggleKalender} />
+						<KalenderKnapp
+							onToggle={this.toggleKalender}
+							erÅpen={erÅpen || false}
+						/>
 					</div>
 					{erÅpen && (
 						<DayPicker
+							fromMonth={
+								this.props.avgrensninger
+									? this.props.avgrensninger.minDato
+									: undefined
+							}
+							toMonth={
+								this.props.avgrensninger
+									? this.props.avgrensninger.maksDato
+									: undefined
+							}
 							month={this.state.måned}
 							selectedDays={dato}
-							onDayClick={this.onDayClick}
-							onMonthChange={(month: Date) => this.setState({ måned: month })}
+							onDayClick={this.onVelgDag}
+							onMonthChange={this.onByttMåned}
 							{...innstillinger}
 							{...mapProps(this.props)}
 						/>

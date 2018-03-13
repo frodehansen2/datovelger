@@ -74,7 +74,9 @@ export class DatoInput extends React.Component<Props, State> {
 	}
 
 	triggerDateChange() {
-		this.props.onDateChange(getDateFromString(this.state.value));
+		if (getDateFromString(this.state.value) !== this.props.date) {
+			this.props.onDateChange(getDateFromString(this.state.value));
+		}
 	}
 
 	render() {

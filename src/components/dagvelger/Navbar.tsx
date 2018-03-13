@@ -1,13 +1,51 @@
 import * as React from 'react';
-import Chevron from 'nav-frontend-chevron';
 import * as moment from 'moment';
+import * as classnames from 'classnames';
+import Chevron from 'nav-frontend-chevron';
 import { DatovelgerAvgrensninger } from './types';
 
 interface Props {
 	måned: Date;
 	byttMåned: (month: Date) => void;
+	byttÅr?: (month: Date) => void;
 	avgrensninger?: DatovelgerAvgrensninger;
 }
+
+interface NavbarKnappProps {
+	måned: Date;
+	retning: 'forrige' | 'neste';
+	disabled: boolean;
+	onClick: (evt: React.MouseEvent<HTMLButtonElement>, måned: Date) => void;
+}
+
+const formatMåned = (måned: Date) => moment(måned).format('MMMM');
+
+const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
+	måned,
+	retning,
+	disabled,
+	onClick
+}) => {
+	const label = `Bytt til ${formatMåned(måned)}`;
+
+	return (
+		<button
+			className={classnames(
+				'nav-dagvelger__navbar__knapp',
+				`nav-dagvelger__navbar__knapp--${retning}`,
+				{
+					'nav-dagvelger__navbar__knapp--disabled': disabled
+				}
+			)}
+			type="button"
+			onClick={(e) => (disabled ? null : onClick(e, måned))}
+			aria-label={label}
+			aria-disabled={disabled}
+		>
+			<Chevron type={retning === 'forrige' ? 'venstre' : 'høyre'} />
+		</button>
+	);
+};
 
 const Navbar: React.StatelessComponent<Props> = ({
 	måned,
@@ -15,14 +53,7 @@ const Navbar: React.StatelessComponent<Props> = ({
 	avgrensninger
 }) => {
 	const forrigeMåned = moment(måned).add(-1, 'months');
-
 	const nesteMåned = moment(måned).add(1, 'months');
-
-	const onClick = (evt: React.MouseEvent<HTMLButtonElement>, mnd: Date) => {
-		evt.preventDefault();
-		evt.stopPropagation();
-		byttMåned(mnd);
-	};
 
 	const forrigeErDisabled = avgrensninger
 		? moment(avgrensninger.minDato).isAfter(forrigeMåned.endOf('month'))
@@ -32,26 +63,26 @@ const Navbar: React.StatelessComponent<Props> = ({
 		? moment(avgrensninger.maksDato).isBefore(nesteMåned.startOf('month'))
 		: false;
 
+	const onClick = (evt: React.MouseEvent<HTMLButtonElement>, mnd: Date) => {
+		evt.preventDefault();
+		evt.stopPropagation();
+		byttMåned(mnd);
+	};
+
 	return (
 		<div className="nav-dagvelger__navbar">
-			<button
-				className="nav-dagvelger__navbar__knapp nav-dagvelger__navbar__knapp--forrige"
-				type="button"
-				onClick={(e) => onClick(e, forrigeMåned.toDate())}
+			<NavbarKnapp
+				måned={forrigeMåned.toDate()}
+				retning="forrige"
 				disabled={forrigeErDisabled}
-				aria-label={`Gå til ${forrigeMåned.format('DDDD YYYY')}`}
-			>
-				<Chevron type="venstre" />
-			</button>
-			<button
-				type="button"
-				onClick={(e) => onClick(e, nesteMåned.toDate())}
+				onClick={onClick}
+			/>
+			<NavbarKnapp
+				måned={nesteMåned.toDate()}
+				retning="neste"
 				disabled={nesteErDisabled}
-				aria-label={`Gå til ${nesteMåned.format('DDDD YYYY')}`}
-				className="nav-dagvelger__navbar__knapp nav-dagvelger__navbar__knapp--neste"
-			>
-				<Chevron type="høyre" />
-			</button>
+				onClick={onClick}
+			/>
 		</div>
 	);
 };
