@@ -5,9 +5,9 @@ import App from './App';
 import 'moment/locale/nb';
 import 'react-dates/initialize';
 import { Router } from 'react-router';
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 
-const history = createBrowserHistory();
+const history = createHashHistory();
 
 ReactDOM.render(
 	<Router history={history}>
