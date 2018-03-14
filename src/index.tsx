@@ -4,5 +4,14 @@ import App from './App';
 
 import 'moment/locale/nb';
 import 'react-dates/initialize';
+import { Router } from 'react-router';
+import { createBrowserHistory } from 'history';
 
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
+const history = createBrowserHistory();
+
+ReactDOM.render(
+	<Router history={history}>
+		<App />
+	</Router>,
+	document.getElementById('root') as HTMLElement
+);

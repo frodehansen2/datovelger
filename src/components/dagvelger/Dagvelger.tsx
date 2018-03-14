@@ -107,12 +107,11 @@ class Dagvelger extends React.Component<Props, State> {
 		this.onDatoDateChange = this.onDatoDateChange.bind(this);
 		this.toggleKalender = this.toggleKalender.bind(this);
 		this.lukkKalender = this.lukkKalender.bind(this);
-		this.validerDato = this.validerDato.bind(this);
 
 		this.state = {
 			måned: props.dato || new Date(),
 			datovalidering: props.dato
-				? this.validerDato(props.dato)
+				? validerDato(props.dato, props.avgrensninger || {})
 				: 'datoErIkkeDefinert',
 			erÅpen: false,
 			statusMessage: ''
@@ -120,18 +119,13 @@ class Dagvelger extends React.Component<Props, State> {
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		console.log(nextProps);
-	}
-
-	validerDato(dato: Date): DatoValidering {
-		if (this.props.avgrensninger) {
-			return validerDato(dato, this.props.avgrensninger);
-		}
-		return 'gyldig';
+		this.setState({
+			datovalidering: validerDato(nextProps.dato, nextProps.avgrensninger || {})
+		});
 	}
 
 	onVelgDag(dato: Date) {
-		const datovalidering = this.validerDato(dato);
+		const datovalidering = validerDato(dato, this.props.avgrensninger || {});
 		if (datovalidering === 'gyldig') {
 			this.setState({
 				statusMessage: `Valgt dag: ${formatDateInputValue(dato)}`,
@@ -149,7 +143,7 @@ class Dagvelger extends React.Component<Props, State> {
 	}
 
 	onDatoDateChange(dato: Date) {
-		const datovalidering = this.validerDato(dato);
+		const datovalidering = validerDato(dato, this.props.avgrensninger || {});
 		if (datovalidering === 'gyldig') {
 			this.setState({
 				statusMessage: `Valgt dag: ${formatDateInputValue(dato)}`,

@@ -5,8 +5,6 @@ import { Moment } from 'moment';
 import Chevron from 'nav-frontend-chevron';
 import * as classnames from 'classnames';
 
-import '../../../node_modules/react-dates/lib/css/_datepicker.css';
-
 import { DatovelgerAvgrensninger } from './types';
 import {
 	erDatoTilgjengelig,
