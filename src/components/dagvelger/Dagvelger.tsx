@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
+import * as moment from 'moment';
 import { guid } from 'nav-frontend-js-utils';
 
 import { DatovelgerAvgrensninger } from './types';
@@ -28,6 +29,7 @@ import DomEventContainer from '../DomEventContainer';
 import DatoInput from './DatoInput';
 import AktivManed from './elementer/AktivManed';
 import AvgrensningerInfo from './elementer/AvgrensningerInfo';
+import KeyboardNavigation from '../common/KeyboardNavigation';
 
 interface State {
 	måned: Date;
@@ -109,11 +111,14 @@ const focusOnDayPicker = (daypickerWrapper: HTMLElement) => {
 	}
 };
 
+const dagDatoNøkkel = (dato: Date) => `${moment(dato).format('DD.MM.YYYY')}`;
+
 class Dagvelger extends React.Component<Props, State> {
 	input: DatoInput | null;
-	setFocusOnCalendar: boolean;
 	id: string;
+	setFocusOnCalendar: boolean;
 	daypickerWrapper: HTMLDivElement | null;
+	nesteFokusertDato: Date | undefined;
 
 	constructor(props: Props) {
 		super(props);
@@ -125,6 +130,11 @@ class Dagvelger extends React.Component<Props, State> {
 		this.onDatoDateChange = this.onDatoDateChange.bind(this);
 		this.toggleKalender = this.toggleKalender.bind(this);
 		this.lukkKalender = this.lukkKalender.bind(this);
+		this.fokuserFørsteDagIMåned = this.fokuserFørsteDagIMåned.bind(this);
+		this.fokuserFørsteDagIMåned = this.fokuserFørsteDagIMåned.bind(this);
+		this.gåTilNesteMåned = this.gåTilNesteMåned.bind(this);
+		this.gåTilForrigeMåned = this.gåTilForrigeMåned.bind(this);
+		this.getFokusertDato = this.getFokusertDato.bind(this);
 
 		this.state = {
 			måned: props.dato || new Date(),
@@ -142,6 +152,17 @@ class Dagvelger extends React.Component<Props, State> {
 		});
 	}
 
+	getFokusertDato(): Date | undefined {
+		let dagElement = undefined;
+		if (this.daypickerWrapper) {
+			if (document.activeElement.classList.contains('DayPicker-Day')) {
+				dagElement = document.activeElement.childNodes.item(0) as HTMLElement;
+				const dateAttr = dagElement.attributes.getNamedItem('data-date').value;
+				return moment(dateAttr, 'DD.MM.YYYY').toDate();
+			}
+		}
+		return undefined;
+	}
 	onVelgDag(dato: Date) {
 		const datovalidering = validerDato(dato, this.props.avgrensninger || {});
 		if (datovalidering === 'gyldig') {
@@ -176,9 +197,76 @@ class Dagvelger extends React.Component<Props, State> {
 	}
 
 	onByttMåned(måned: Date) {
+		let fokusertDato = this.getFokusertDato();
+		if (fokusertDato) {
+			if (moment(this.state.måned).isBefore(måned)) {
+				this.nesteFokusertDato = moment(fokusertDato)
+					.add(1, 'months')
+					.toDate();
+			} else {
+				this.nesteFokusertDato = moment(fokusertDato)
+					.add(-1, 'months')
+					.toDate();
+			}
+		}
 		this.setState({
 			måned
 		});
+	}
+
+	gåTilNesteMåned(evt: React.KeyboardEvent<any>) {
+		evt.preventDefault();
+		const mnd = moment(this.state.måned).add(1, 'month');
+		if (
+			this.props.avgrensninger &&
+			mnd
+				.startOf('month')
+				.isBefore(moment(this.props.avgrensninger.maksDato).endOf('month'))
+		) {
+			this.onByttMåned(mnd.toDate());
+		}
+	}
+
+	gåTilForrigeMåned(evt: React.KeyboardEvent<any>) {
+		evt.preventDefault();
+		const mnd = moment(this.state.måned).add(-1, 'month');
+		if (
+			this.props.avgrensninger &&
+			mnd
+				.endOf('month')
+				.isAfter(moment(this.props.avgrensninger.minDato).startOf('month'))
+		) {
+			this.onByttMåned(mnd.toDate());
+		}
+	}
+
+	fokuserPåDato(dato: Date) {
+		if (this.daypickerWrapper) {
+			const el: HTMLElement = this.daypickerWrapper.querySelector(
+				`[data-date="${dagDatoNøkkel(dato)}"]`
+			) as HTMLElement;
+			if (el) {
+				(el.parentNode as HTMLElement).focus();
+			}
+		}
+	}
+
+	fokuserFørsteDagIMåned(evt: React.KeyboardEvent<any>) {
+		evt.preventDefault();
+		this.fokuserPåDato(
+			moment(this.state.måned)
+				.startOf('month')
+				.toDate()
+		);
+	}
+
+	fokuserSisteDagIMåned(evt: React.KeyboardEvent<any>) {
+		evt.preventDefault();
+		this.fokuserPåDato(
+			moment(this.state.måned)
+				.endOf('month')
+				.toDate()
+		);
 	}
 
 	toggleKalender() {
@@ -192,6 +280,14 @@ class Dagvelger extends React.Component<Props, State> {
 	componentDidUpdate(prevProps: Props, prevState: State) {
 		if (!prevState.erÅpen && this.state.erÅpen && this.daypickerWrapper) {
 			focusOnDayPicker(this.daypickerWrapper);
+		}
+		if (
+			prevState.måned !== this.state.måned &&
+			this.daypickerWrapper &&
+			this.nesteFokusertDato
+		) {
+			this.fokuserPåDato(this.nesteFokusertDato);
+			this.nesteFokusertDato = undefined;
 		}
 	}
 
@@ -262,24 +358,34 @@ class Dagvelger extends React.Component<Props, State> {
 					</div>
 					{erÅpen && (
 						<div ref={(c) => (this.daypickerWrapper = c)} id={`dag`}>
-							<DayPicker
-								fromMonth={
-									this.props.avgrensninger
-										? this.props.avgrensninger.minDato
-										: undefined
-								}
-								toMonth={
-									this.props.avgrensninger
-										? this.props.avgrensninger.maksDato
-										: undefined
-								}
-								month={this.state.måned}
-								selectedDays={dato}
-								onDayClick={this.onVelgDag}
-								onMonthChange={this.onByttMåned}
-								{...innstillinger}
-								{...mapProps(this.props)}
-							/>
+							<KeyboardNavigation
+								onHome={(e) => this.fokuserFørsteDagIMåned(e)}
+								onEnd={(e) => this.fokuserSisteDagIMåned(e)}
+								onPageDown={(e) => this.gåTilNesteMåned(e)}
+								onPageUp={(e) => this.gåTilForrigeMåned(e)}
+							>
+								<DayPicker
+									renderDay={(d) => (
+										<span data-date={dagDatoNøkkel(d)}>{d.getDate()}</span>
+									)}
+									fromMonth={
+										this.props.avgrensninger
+											? this.props.avgrensninger.minDato
+											: undefined
+									}
+									toMonth={
+										this.props.avgrensninger
+											? this.props.avgrensninger.maksDato
+											: undefined
+									}
+									month={this.state.måned}
+									selectedDays={dato}
+									onDayClick={this.onVelgDag}
+									onMonthChange={this.onByttMåned}
+									{...innstillinger}
+									{...mapProps(this.props)}
+								/>
+							</KeyboardNavigation>
 						</div>
 					)}
 				</div>

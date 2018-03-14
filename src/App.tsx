@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import './styles/index.css';
 import DayPickerDemo from './DayPickerDemo';
 import ReactDatesDemo from './ReactDatesDemo';
+import { Workbench } from './components/workbench/Workbench';
 
 interface Props {}
 
@@ -31,6 +32,7 @@ class App extends React.Component<Props, {}> {
 					</div>
 
 					<Switch>
+						<Route component={Workbench} path="/workbench" />
 						<Route component={DayPickerDemo} path="/daypicker" />
 						<Route component={ReactDatesDemo} path="/reactdates" />
 					</Switch>
