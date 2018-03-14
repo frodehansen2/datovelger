@@ -10,7 +10,7 @@ import './styles/index.css';
 interface Props {}
 
 export interface State {
-	dato: Date | null;
+	dato: Date | undefined;
 	inputValue: string;
 	error: string | undefined;
 	avgrensninger: DatovelgerAvgrensninger;
@@ -23,7 +23,7 @@ class DayPickerDemo extends React.Component<Props, State> {
 		this.oppdaterDato = this.oppdaterDato.bind(this);
 		this.addDay = this.addDay.bind(this);
 		this.state = {
-			dato: null,
+			dato: undefined,
 			inputValue: '',
 			error: '',
 			avgrensninger: {
@@ -50,7 +50,7 @@ class DayPickerDemo extends React.Component<Props, State> {
 		alert('Valgt dato er: ' + this.state.dato);
 	}
 
-	oppdaterDato(dato: Date | null) {
+	oppdaterDato(dato?: Date) {
 		this.setState({
 			dato,
 			error: validerDato(dato, this.state.avgrensninger)
@@ -80,8 +80,8 @@ class DayPickerDemo extends React.Component<Props, State> {
 							<label htmlFor="datoinput">Velg dato</label>
 						</div>
 						<Dagvelger
-							inputId="datoinput"
-							dato={this.state.dato || new Date()}
+							id="datoinput"
+							dato={this.state.dato}
 							velgDag={(d: Date) => this.oppdaterDato(d)}
 							avgrensninger={this.state.avgrensninger}
 							inputProps={{

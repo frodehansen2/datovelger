@@ -44,7 +44,7 @@ export interface Props {
 	/** Kalles når en dato velges */
 	velgDag: (date: Date) => void;
 	/** Påkrevd id til inputfelt */
-	inputId: string;
+	id: string;
 	/** Input props */
 	inputProps?: {
 		placeholder?: string;
@@ -93,9 +93,27 @@ const mapProps = (props: Props): DayPickerProps => {
 	return {};
 };
 
+const focusOnDayPicker = (daypickerWrapper: HTMLElement) => {
+	const selectedDay = daypickerWrapper.querySelector(
+		'.DayPicker-Day--selected'
+	) as HTMLElement;
+	const availableDay = daypickerWrapper.querySelector(
+		'.DayPicker-Day[aria-disabled=false],.DayPicker-Day--today'
+	) as HTMLElement;
+	if (selectedDay) {
+		selectedDay.focus();
+	} else if (availableDay) {
+		availableDay.focus();
+	} else {
+		daypickerWrapper.focus();
+	}
+};
+
 class Dagvelger extends React.Component<Props, State> {
 	input: DatoInput | null;
+	setFocusOnCalendar: boolean;
 	id: string;
+	daypickerWrapper: HTMLDivElement | null;
 
 	constructor(props: Props) {
 		super(props);
@@ -171,10 +189,16 @@ class Dagvelger extends React.Component<Props, State> {
 		this.setState({ erÅpen: false });
 	}
 
+	componentDidUpdate(prevProps: Props, prevState: State) {
+		if (!prevState.erÅpen && this.state.erÅpen && this.daypickerWrapper) {
+			focusOnDayPicker(this.daypickerWrapper);
+		}
+	}
+
 	render() {
 		const {
-			dato = new Date(),
-			inputId,
+			dato,
+			id,
 			locale = 'no',
 			visUkenumre = false,
 			inputProps,
@@ -200,7 +224,7 @@ class Dagvelger extends React.Component<Props, State> {
 				/>
 			),
 			captionElement: (
-				<AktivManed date={dato} locale={locale} localeUtils={localeUtils} />
+				<AktivManed date={måned} locale={locale} localeUtils={localeUtils} />
 			),
 			firstDayOfWeek: 1,
 			showWeekNumbers: visUkenumre
@@ -223,7 +247,7 @@ class Dagvelger extends React.Component<Props, State> {
 						<DatoInput
 							{...inputProps}
 							inputProps={{
-								id: inputId,
+								id: id,
 								'aria-invalid': invalidDate,
 								'aria-describedby': avgrensningerInfoId
 							}}
@@ -237,24 +261,26 @@ class Dagvelger extends React.Component<Props, State> {
 						/>
 					</div>
 					{erÅpen && (
-						<DayPicker
-							fromMonth={
-								this.props.avgrensninger
-									? this.props.avgrensninger.minDato
-									: undefined
-							}
-							toMonth={
-								this.props.avgrensninger
-									? this.props.avgrensninger.maksDato
-									: undefined
-							}
-							month={this.state.måned}
-							selectedDays={dato}
-							onDayClick={this.onVelgDag}
-							onMonthChange={this.onByttMåned}
-							{...innstillinger}
-							{...mapProps(this.props)}
-						/>
+						<div ref={(c) => (this.daypickerWrapper = c)} id={`dag`}>
+							<DayPicker
+								fromMonth={
+									this.props.avgrensninger
+										? this.props.avgrensninger.minDato
+										: undefined
+								}
+								toMonth={
+									this.props.avgrensninger
+										? this.props.avgrensninger.maksDato
+										: undefined
+								}
+								month={this.state.måned}
+								selectedDays={dato}
+								onDayClick={this.onVelgDag}
+								onMonthChange={this.onByttMåned}
+								{...innstillinger}
+								{...mapProps(this.props)}
+							/>
+						</div>
 					)}
 				</div>
 			</DomEventContainer>
