@@ -2,13 +2,13 @@ import * as React from 'react';
 import * as moment from 'moment';
 import * as classnames from 'classnames';
 import Chevron from 'nav-frontend-chevron';
-import { DatovelgerAvgrensninger } from './types';
 
 interface Props {
 	måned: Date;
 	byttMåned: (month: Date) => void;
 	byttÅr?: (month: Date) => void;
-	avgrensninger?: DatovelgerAvgrensninger;
+	min?: Date;
+	maks?: Date;
 }
 
 interface NavbarKnappProps {
@@ -50,17 +50,18 @@ const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
 const Navbar: React.StatelessComponent<Props> = ({
 	måned,
 	byttMåned,
-	avgrensninger
+	min,
+	maks
 }) => {
 	const forrigeMåned = moment(måned).add(-1, 'months');
 	const nesteMåned = moment(måned).add(1, 'months');
 
-	const forrigeErDisabled = avgrensninger
-		? moment(avgrensninger.minDato).isAfter(forrigeMåned.endOf('month'))
+	const forrigeErDisabled = min
+		? moment(min).isAfter(forrigeMåned.endOf('month'))
 		: false;
 
-	const nesteErDisabled = avgrensninger
-		? moment(avgrensninger.maksDato).isBefore(nesteMåned.startOf('month'))
+	const nesteErDisabled = maks
+		? moment(maks).isBefore(nesteMåned.startOf('month'))
 		: false;
 
 	const onClick = (evt: React.MouseEvent<HTMLButtonElement>, mnd: Date) => {

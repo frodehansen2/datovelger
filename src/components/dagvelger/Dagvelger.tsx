@@ -1,35 +1,23 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-import * as moment from 'moment';
 import { guid } from 'nav-frontend-js-utils';
-
 import { DatovelgerAvgrensninger } from './types';
-import {
-	normaliserDato,
-	formaterDayAriaLabel,
-	formatDateInputValue
-} from './utils';
+import { formatDateInputValue, normaliserDato } from './utils';
 
-/** Denner foreløpig ikke registert riktig i forhold til typings */
-const momentLocaleUtils = require('react-day-picker/moment');
-
-import DayPicker, {
-	DayPickerProps,
-	Modifier,
-	RangeModifier,
-	AfterModifier,
-	BeforeModifier,
-	DaysOfWeekModifier
-} from 'react-day-picker';
 import '../../../node_modules/react-day-picker/lib/style.css';
-import Navbar from './Navbar';
 import { validerDato, DatoValidering } from './utils/datovalidering';
 import KalenderKnapp from './elementer/KalenderKnapp';
 import DomEventContainer from '../DomEventContainer';
 import DatoInput from './DatoInput';
-import AktivManed from './elementer/AktivManed';
 import AvgrensningerInfo from './elementer/AvgrensningerInfo';
-import KeyboardNavigation from '../common/KeyboardNavigation';
+import { Kalender } from './Kalender';
+import {
+	Modifier,
+	RangeModifier,
+	DaysOfWeekModifier,
+	BeforeModifier,
+	AfterModifier
+} from 'react-day-picker';
 
 interface State {
 	måned: Date;
@@ -39,14 +27,14 @@ interface State {
 }
 
 export interface Props {
+	/** Påkrevd id til inputfelt */
+	id: string;
 	/** Valgt dato */
 	dato?: Date;
 	/** Begrensninger på hvilke datoer bruker kan velge */
 	avgrensninger?: DatovelgerAvgrensninger;
 	/** Kalles når en dato velges */
 	velgDag: (date: Date) => void;
-	/** Påkrevd id til inputfelt */
-	id: string;
 	/** Input props */
 	inputProps?: {
 		placeholder?: string;
@@ -61,58 +49,34 @@ export interface Props {
 	visUkenumre?: boolean;
 }
 
-const mapProps = (props: Props): DayPickerProps => {
-	const { avgrensninger } = props;
-
-	if (avgrensninger) {
-		let ugyldigeDager: Modifier[] = [];
-		if (avgrensninger.ugyldigeTidsperioder) {
-			ugyldigeDager = avgrensninger.ugyldigeTidsperioder.map(
-				(t): RangeModifier => {
-					return {
-						from: t.startdato,
-						to: t.sluttdato
-					};
-				}
-			);
-		}
-		const minDato =
-			avgrensninger.minDato && normaliserDato(avgrensninger.minDato);
-		const maksDato =
-			avgrensninger.maksDato && normaliserDato(avgrensninger.maksDato);
-		const helgedager = {
-			daysOfWeek: avgrensninger.helgedagerIkkeTillatt ? [0, 6] : []
-		};
-		return {
-			disabledDays: [
-				...ugyldigeDager,
-				...(maksDato ? [{ after: maksDato.toDate() } as AfterModifier] : []),
-				...(minDato ? [{ before: minDato.toDate() } as BeforeModifier] : []),
-				...[helgedager as DaysOfWeekModifier]
-			]
-		};
+const getUtilgjengeligeDager = (
+	avgrensninger: DatovelgerAvgrensninger
+): Modifier[] => {
+	let ugyldigeDager: Modifier[] = [];
+	if (avgrensninger.ugyldigeTidsperioder) {
+		ugyldigeDager = avgrensninger.ugyldigeTidsperioder.map(
+			(t): RangeModifier => {
+				return {
+					from: t.startdato,
+					to: t.sluttdato
+				};
+			}
+		);
 	}
-	return {};
+	const minDato =
+		avgrensninger.minDato && normaliserDato(avgrensninger.minDato);
+	const maksDato =
+		avgrensninger.maksDato && normaliserDato(avgrensninger.maksDato);
+	const helgedager = {
+		daysOfWeek: avgrensninger.helgedagerIkkeTillatt ? [0, 6] : []
+	};
+	return [
+		...ugyldigeDager,
+		...(maksDato ? [{ after: maksDato.toDate() } as AfterModifier] : []),
+		...(minDato ? [{ before: minDato.toDate() } as BeforeModifier] : []),
+		...[helgedager as DaysOfWeekModifier]
+	];
 };
-
-const focusOnDayPicker = (daypickerWrapper: HTMLElement) => {
-	const selectedDay = daypickerWrapper.querySelector(
-		'.DayPicker-Day--selected'
-	) as HTMLElement;
-	const availableDay = daypickerWrapper.querySelector(
-		'.DayPicker-Day[aria-disabled=false],.DayPicker-Day--today'
-	) as HTMLElement;
-	if (selectedDay) {
-		selectedDay.focus();
-	} else if (availableDay) {
-		availableDay.focus();
-	} else {
-		daypickerWrapper.focus();
-	}
-};
-
-const dagDatoNøkkel = (dato: Date) => `${moment(dato).format('DD.MM.YYYY')}`;
-
 class Dagvelger extends React.Component<Props, State> {
 	input: DatoInput | null;
 	id: string;
@@ -120,6 +84,7 @@ class Dagvelger extends React.Component<Props, State> {
 	daypickerWrapper: HTMLDivElement | null;
 	nesteFokusertDato: Date | undefined;
 	setFokusPåInput: boolean | undefined;
+	kalender: Kalender | null;
 
 	constructor(props: Props) {
 		super(props);
@@ -127,14 +92,9 @@ class Dagvelger extends React.Component<Props, State> {
 		this.id = guid();
 
 		this.onVelgDag = this.onVelgDag.bind(this);
-		this.onByttMåned = this.onByttMåned.bind(this);
 		this.onDatoDateChange = this.onDatoDateChange.bind(this);
 		this.toggleKalender = this.toggleKalender.bind(this);
 		this.lukkKalender = this.lukkKalender.bind(this);
-		this.fokuserFørsteDagIMåned = this.fokuserFørsteDagIMåned.bind(this);
-		this.fokuserFørsteDagIMåned = this.fokuserFørsteDagIMåned.bind(this);
-		this.getFokusertDato = this.getFokusertDato.bind(this);
-		this.navigerMåneder = this.navigerMåneder.bind(this);
 
 		this.state = {
 			måned: props.dato || new Date(),
@@ -152,17 +112,6 @@ class Dagvelger extends React.Component<Props, State> {
 		});
 	}
 
-	getFokusertDato(): Date | undefined {
-		let dagElement = undefined;
-		if (this.daypickerWrapper) {
-			if (document.activeElement.classList.contains('DayPicker-Day')) {
-				dagElement = document.activeElement.childNodes.item(0) as HTMLElement;
-				const dateAttr = dagElement.attributes.getNamedItem('data-date').value;
-				return moment(dateAttr, 'DD.MM.YYYY').toDate();
-			}
-		}
-		return undefined;
-	}
 	onVelgDag(dato: Date) {
 		const datovalidering = validerDato(dato, this.props.avgrensninger || {});
 		if (datovalidering === 'gyldig') {
@@ -196,72 +145,6 @@ class Dagvelger extends React.Component<Props, State> {
 		}
 	}
 
-	onByttMåned(måned: Date) {
-		let fokusertDato = this.getFokusertDato();
-		if (fokusertDato) {
-			const diff = moment(måned)
-				.startOf('month')
-				.diff(moment(this.state.måned).startOf('month'), 'months');
-			if (moment(this.state.måned).isBefore(måned)) {
-				this.nesteFokusertDato = moment(fokusertDato)
-					.add(diff, 'months')
-					.toDate();
-			} else {
-				this.nesteFokusertDato = moment(fokusertDato)
-					.add(diff, 'months')
-					.toDate();
-			}
-		}
-		this.setState({
-			måned
-		});
-	}
-
-	navigerMåneder(evt: React.KeyboardEvent<any>, antall: number) {
-		evt.preventDefault();
-		const mnd = moment(this.state.måned).add(antall, 'month'); // const mnd = moment(this.state.måned).add(1, 'month');
-		if (
-			this.props.avgrensninger &&
-			mnd
-				.startOf('month')
-				.isBefore(moment(this.props.avgrensninger.maksDato).endOf('month')) &&
-			mnd
-				.endOf('month')
-				.isAfter(moment(this.props.avgrensninger.minDato).startOf('month'))
-		) {
-			this.onByttMåned(mnd.toDate());
-		}
-	}
-
-	fokuserPåDato(dato: Date) {
-		if (this.daypickerWrapper) {
-			const el: HTMLElement = this.daypickerWrapper.querySelector(
-				`[data-date="${dagDatoNøkkel(dato)}"]`
-			) as HTMLElement;
-			if (el) {
-				(el.parentNode as HTMLElement).focus();
-			}
-		}
-	}
-
-	fokuserFørsteDagIMåned(evt: React.KeyboardEvent<any>) {
-		evt.preventDefault();
-		this.fokuserPåDato(
-			moment(this.state.måned)
-				.startOf('month')
-				.toDate()
-		);
-	}
-
-	fokuserSisteDagIMåned(evt: React.KeyboardEvent<any>) {
-		evt.preventDefault();
-		this.fokuserPåDato(
-			moment(this.state.måned)
-				.endOf('month')
-				.toDate()
-		);
-	}
-
 	toggleKalender() {
 		this.setState({ erÅpen: !this.state.erÅpen });
 	}
@@ -272,19 +155,11 @@ class Dagvelger extends React.Component<Props, State> {
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		if (!prevState.erÅpen && this.state.erÅpen && this.daypickerWrapper) {
-			focusOnDayPicker(this.daypickerWrapper);
+		if (!prevState.erÅpen && this.state.erÅpen && this.kalender) {
+			this.kalender.settFokus();
 		} else if (prevState.erÅpen && !this.state.erÅpen && this.input) {
 			this.setFokusPåInput = false;
 			this.input.focus();
-		}
-		if (
-			prevState.måned !== this.state.måned &&
-			this.daypickerWrapper &&
-			this.nesteFokusertDato
-		) {
-			this.fokuserPåDato(this.nesteFokusertDato);
-			this.nesteFokusertDato = undefined;
 		}
 	}
 
@@ -292,37 +167,12 @@ class Dagvelger extends React.Component<Props, State> {
 		const {
 			dato,
 			id,
-			locale = 'no',
-			visUkenumre = false,
 			inputProps,
-			avgrensninger
+			avgrensninger,
+			...kalenderProps
 		} = this.props;
 
-		const { måned, erÅpen, datovalidering } = this.state;
-
-		const localeUtils = {
-			...momentLocaleUtils,
-			formatDay: (d: Date, l: string) =>
-				formaterDayAriaLabel(d, l, this.props.avgrensninger)
-		};
-
-		const innstillinger: DayPickerProps = {
-			locale,
-			localeUtils,
-			navbarElement: (
-				<Navbar
-					måned={måned}
-					byttMåned={(d: Date) => this.onByttMåned(d)}
-					avgrensninger={this.props.avgrensninger}
-				/>
-			),
-			captionElement: (
-				<AktivManed date={måned} locale={locale} localeUtils={localeUtils} />
-			),
-			firstDayOfWeek: 1,
-			showWeekNumbers: visUkenumre
-		};
-
+		const { erÅpen, datovalidering } = this.state;
 		const avgrensningerInfoId = avgrensninger ? `${this.id}_srDesc` : undefined;
 		const invalidDate = datovalidering !== 'gyldig';
 
@@ -345,7 +195,7 @@ class Dagvelger extends React.Component<Props, State> {
 								'aria-describedby': avgrensningerInfoId
 							}}
 							ref={(c) => (this.input = c)}
-							date={this.props.dato}
+							date={dato}
 							onDateChange={this.onDatoDateChange}
 						/>
 						<KalenderKnapp
@@ -354,39 +204,21 @@ class Dagvelger extends React.Component<Props, State> {
 						/>
 					</div>
 					{erÅpen && (
-						<div ref={(c) => (this.daypickerWrapper = c)} id={`dag`}>
-							<KeyboardNavigation
-								onHome={(e) => this.fokuserFørsteDagIMåned(e)}
-								onEnd={(e) => this.fokuserSisteDagIMåned(e)}
-								onPageDown={(e) => this.navigerMåneder(e, 1)}
-								onPageUp={(e) => this.navigerMåneder(e, -1)}
-								onAltPageDown={(e) => this.navigerMåneder(e, 12)}
-								onAltPageUp={(e) => this.navigerMåneder(e, -12)}
-								onEscape={() => this.lukkKalender(true)}
-							>
-								<DayPicker
-									renderDay={(d) => (
-										<span data-date={dagDatoNøkkel(d)}>{d.getDate()}</span>
-									)}
-									fromMonth={
-										this.props.avgrensninger
-											? this.props.avgrensninger.minDato
-											: undefined
-									}
-									toMonth={
-										this.props.avgrensninger
-											? this.props.avgrensninger.maksDato
-											: undefined
-									}
-									month={this.state.måned}
-									selectedDays={dato}
-									onDayClick={this.onVelgDag}
-									onMonthChange={this.onByttMåned}
-									{...innstillinger}
-									{...mapProps(this.props)}
-								/>
-							</KeyboardNavigation>
-						</div>
+						<Kalender
+							ref={(c) => (this.kalender = c)}
+							{...kalenderProps}
+							dato={dato}
+							måned={dato || new Date()}
+							min={avgrensninger && avgrensninger.minDato}
+							maks={avgrensninger && avgrensninger.maksDato}
+							utilgjengeligeDager={
+								avgrensninger
+									? getUtilgjengeligeDager(avgrensninger)
+									: undefined
+							}
+							onVelgDag={this.onVelgDag}
+							onLukk={() => this.lukkKalender(true)}
+						/>
 					)}
 				</div>
 			</DomEventContainer>
