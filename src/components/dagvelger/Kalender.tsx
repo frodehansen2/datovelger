@@ -126,7 +126,12 @@ export class Kalender extends React.Component<Props, State> {
 		};
 
 		return (
-			<div ref={(c) => (this.kalender = c)}>
+			<div
+				ref={(c) => (this.kalender = c)}
+				role="dialog"
+				aria-label="Kalender"
+				data-helptext="Press the arrow keys to navigate by day, PageUp and PageDown to navigate by month, Alt+PageUp and Alt+PageDown to navigate by year, or Escape to cancel."
+			>
 				<KeyboardNavigation
 					onHome={(e) => fokuserFørsteDagIMåned(kalender, måned, e)}
 					onEnd={(e) => fokuserSisteDagIMåned(kalender, måned, e)}

@@ -174,7 +174,8 @@ class Dagvelger extends React.Component<Props, State> {
 
 		const { erÅpen, datovalidering } = this.state;
 		const avgrensningerInfoId = avgrensninger ? `${this.id}_srDesc` : undefined;
-		const invalidDate = datovalidering !== 'gyldig';
+		const invalidDate =
+			datovalidering !== 'gyldig' && this.props.dato !== undefined;
 
 		return (
 			<DomEventContainer onBlur={() => this.lukkKalender()}>

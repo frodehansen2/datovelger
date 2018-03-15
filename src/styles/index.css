@@ -1778,6 +1778,10 @@ body .blokk-xl {
   color: #FFF;
   background-color: #0067C5 !important;
 }
+.nav-dagvelger .DayPicker-Day--selected.DayPicker-Day--disabled {
+  color: #0067C5 !important;
+  font-weight: normal;
+}
 .nav-dagvelger .DayPicker-Day--disabled {
   color: #B7B1A9;
   background-color: #f6f6f6;

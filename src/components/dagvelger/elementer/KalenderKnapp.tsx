@@ -17,8 +17,9 @@ const KalenderKnapp: React.StatelessComponent<Props> = ({
 			e.preventDefault();
 			onToggle();
 		}}
-		aria-label={erÅpen ? 'Lukk datovelger' : 'Vis datovelger'}
-		aria-pressed={erÅpen}
+		role="button"
+		aria-label={erÅpen ? 'Kalender' : 'Kalender'}
+		aria-expanded={erÅpen}
 	>
 		<KalenderIkon />
 	</button>
