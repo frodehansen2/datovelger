@@ -1,9 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-
 import 'moment/locale/nb';
-import 'react-dates/initialize';
 import { Router } from 'react-router';
 import { createHashHistory } from 'history';
 

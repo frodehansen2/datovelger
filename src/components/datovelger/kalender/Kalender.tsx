@@ -3,14 +3,14 @@ import DayPicker, { DayPickerProps, Modifier } from 'react-day-picker';
 import * as moment from 'moment';
 import {
 	dagDatoNøkkel,
-	fokuserFørsteDagIMåned,
 	fokuserPåDato,
-	fokuserSisteDagIMåned,
 	getFokusertDato,
 	getSammeDatoIMåned,
 	erMånedTilgjengelig,
 	fokuserKalender,
-	formaterDayAriaLabel
+	formaterDayAriaLabel,
+	fokuserFørsteDagIUke,
+	fokuserSisteDagIUke
 } from '../utils';
 import Navbar from './Navbar';
 import { AktivManed } from './AktivManed';
@@ -100,7 +100,6 @@ export class Kalender extends React.Component<Props, State> {
 			utilgjengeligeDager
 		} = this.props;
 		const { måned } = this.state;
-		const kalender = this.kalender;
 
 		const localeUtils = {
 			...momentLocaleUtils,
@@ -133,8 +132,18 @@ export class Kalender extends React.Component<Props, State> {
 				data-helptext="Press the arrow keys to navigate by day, PageUp and PageDown to navigate by month, Alt+PageUp and Alt+PageDown to navigate by year, or Escape to cancel."
 			>
 				<KeyboardNavigation
-					onHome={(e) => fokuserFørsteDagIMåned(kalender, måned, e)}
-					onEnd={(e) => fokuserSisteDagIMåned(kalender, måned, e)}
+					onHome={(e) => {
+						const d = getFokusertDato(this.kalender);
+						if (d) {
+							fokuserFørsteDagIUke(this.kalender, d, e);
+						}
+					}}
+					onEnd={(e) => {
+						const d = getFokusertDato(this.kalender);
+						if (d) {
+							fokuserSisteDagIUke(this.kalender, d, e);
+						}
+					}}
 					onPageDown={(e) => this.navigerMåneder(e, 1)}
 					onPageUp={(e) => this.navigerMåneder(e, -1)}
 					onAltPageDown={(e) => this.navigerMåneder(e, 12)}
@@ -143,7 +152,9 @@ export class Kalender extends React.Component<Props, State> {
 				>
 					<DayPicker
 						renderDay={(d) => (
-							<span data-date={dagDatoNøkkel(d)}>{d.getDate()}</span>
+							<span data-date={dagDatoNøkkel(d)} aria-hidden="true">
+								{d.getDate()}
+							</span>
 						)}
 						fromMonth={min}
 						toMonth={maks}

@@ -46,12 +46,14 @@ export class KeyboardActions extends React.Component<Props> {
 		super(props);
 		this.onKeyDown = this.onKeyDown.bind(this);
 	}
+
 	onKeyDown(evt: React.KeyboardEvent<any>) {
 		const action = getAction(evt, this.props.actions);
 		if (action) {
 			action.onAction(evt);
 		}
 	}
+
 	render() {
 		return (
 			<DomEventContainer onKeyDown={this.onKeyDown}>

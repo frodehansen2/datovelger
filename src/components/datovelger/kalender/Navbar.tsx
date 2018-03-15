@@ -16,6 +16,7 @@ interface NavbarKnappProps {
 	retning: 'forrige' | 'neste';
 	disabled: boolean;
 	onClick: (evt: React.MouseEvent<HTMLButtonElement>, måned: Date) => void;
+	accessKey?: string;
 }
 
 const formatMåned = (måned: Date) => moment(måned).format('MMMM');
@@ -24,7 +25,8 @@ const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
 	måned,
 	retning,
 	disabled,
-	onClick
+	onClick,
+	accessKey
 }) => {
 	const label = `Bytt til ${formatMåned(måned)}`;
 
@@ -41,6 +43,8 @@ const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
 			onClick={(e) => (disabled ? null : onClick(e, måned))}
 			aria-label={label}
 			aria-disabled={disabled}
+			role="button"
+			accessKey={accessKey}
 		>
 			<Chevron type={retning === 'forrige' ? 'venstre' : 'høyre'} />
 		</button>
@@ -81,12 +85,14 @@ const Navbar: React.StatelessComponent<Props> = ({
 				retning="forrige"
 				disabled={forrigeErDisabled}
 				onClick={onClick}
+				accessKey="1"
 			/>
 			<NavbarKnapp
 				måned={nesteMåned.toDate()}
 				retning="neste"
 				disabled={nesteErDisabled}
 				onClick={onClick}
+				accessKey="2"
 			/>
 		</div>
 	);

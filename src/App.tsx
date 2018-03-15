@@ -15,8 +15,8 @@ class App extends React.Component<Props, {}> {
 						<h1>Datovelger-test</h1>
 					</div>
 					<Switch>
+						<Route component={DayPickerDemo} path="/" />
 						<Route component={Workbench} path="/workbench" />
-						<Route component={DayPickerDemo} path="/daypicker" />
 					</Switch>
 				</div>
 			</div>
