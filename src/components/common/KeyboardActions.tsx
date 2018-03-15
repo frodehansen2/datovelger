@@ -29,28 +29,22 @@ export interface Props {
 	actions: KeyboardAction[];
 }
 
-interface State {
-	key?: string;
-	shiftKey?: string;
-	altKey?: string;
-	ctrlKey?: string;
-	action?: string;
-}
-
 const getAction = (
 	evt: React.KeyboardEvent<any>,
 	actions: KeyboardAction[]
 ): KeyboardAction | undefined => {
 	return actions.find((action) => {
+		if (evt.altKey) {
+			return evt.key === action.key && action.altKey === true;
+		}
 		return evt.key === action.key;
 	});
 };
 
-export class KeyboardActions extends React.Component<Props, State> {
+export class KeyboardActions extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props);
 		this.onKeyDown = this.onKeyDown.bind(this);
-		this.state = {};
 	}
 	onKeyDown(evt: React.KeyboardEvent<any>) {
 		const action = getAction(evt, this.props.actions);

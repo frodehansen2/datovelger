@@ -70,7 +70,11 @@ const Navbar: React.StatelessComponent<Props> = ({
 	};
 
 	return (
-		<div className="nav-dagvelger__navbar">
+		<div
+			className="nav-dagvelger__navbar"
+			role="presentation"
+			aria-hidden="true"
+		>
 			<NavbarKnapp
 				måned={forrigeMåned.toDate()}
 				retning="forrige"

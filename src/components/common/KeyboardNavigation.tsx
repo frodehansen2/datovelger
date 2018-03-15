@@ -12,6 +12,8 @@ export interface Props {
 	onArrowRight?: KeyboarActionEvent;
 	onPageDown?: KeyboarActionEvent;
 	onPageUp?: KeyboarActionEvent;
+	onAltPageDown?: KeyboarActionEvent;
+	onAltPageUp?: KeyboarActionEvent;
 	onHome?: KeyboarActionEvent;
 	onEnd?: KeyboarActionEvent;
 }
@@ -56,6 +58,18 @@ const pageDownAction = (onAction: KeyboarActionEvent): KeyboardAction => ({
 	key: 'PageDown',
 	onAction
 });
+const altPageUpAction = (onAction: KeyboarActionEvent): KeyboardAction => ({
+	name: 'altPageUp',
+	key: 'PageUp',
+	altKey: true,
+	onAction
+});
+const altPageDownAction = (onAction: KeyboarActionEvent): KeyboardAction => ({
+	name: 'altPageDown',
+	key: 'PageDown',
+	altKey: true,
+	onAction
+});
 const homeAction = (onAction: KeyboarActionEvent): KeyboardAction => ({
 	name: 'home',
 	key: 'Home',
@@ -78,6 +92,8 @@ const KeyboardNavigation: React.StatelessComponent<Props> = (props) => (
 			...(props.onArrowRight ? [arrowRightAction(props.onArrowRight)] : []),
 			...(props.onPageUp ? [pageUpAction(props.onPageUp)] : []),
 			...(props.onPageDown ? [pageDownAction(props.onPageDown)] : []),
+			...(props.onAltPageUp ? [altPageUpAction(props.onAltPageUp)] : []),
+			...(props.onAltPageDown ? [altPageDownAction(props.onAltPageDown)] : []),
 			...(props.onHome ? [homeAction(props.onHome)] : []),
 			...(props.onEnd ? [endAction(props.onEnd)] : [])
 		]}

@@ -119,6 +119,7 @@ class Dagvelger extends React.Component<Props, State> {
 	setFocusOnCalendar: boolean;
 	daypickerWrapper: HTMLDivElement | null;
 	nesteFokusertDato: Date | undefined;
+	setFokusPåInput: boolean | undefined;
 
 	constructor(props: Props) {
 		super(props);
@@ -132,9 +133,8 @@ class Dagvelger extends React.Component<Props, State> {
 		this.lukkKalender = this.lukkKalender.bind(this);
 		this.fokuserFørsteDagIMåned = this.fokuserFørsteDagIMåned.bind(this);
 		this.fokuserFørsteDagIMåned = this.fokuserFørsteDagIMåned.bind(this);
-		this.gåTilNesteMåned = this.gåTilNesteMåned.bind(this);
-		this.gåTilForrigeMåned = this.gåTilForrigeMåned.bind(this);
 		this.getFokusertDato = this.getFokusertDato.bind(this);
+		this.navigerMåneder = this.navigerMåneder.bind(this);
 
 		this.state = {
 			måned: props.dato || new Date(),
@@ -199,13 +199,16 @@ class Dagvelger extends React.Component<Props, State> {
 	onByttMåned(måned: Date) {
 		let fokusertDato = this.getFokusertDato();
 		if (fokusertDato) {
+			const diff = moment(måned)
+				.startOf('month')
+				.diff(moment(this.state.måned).startOf('month'), 'months');
 			if (moment(this.state.måned).isBefore(måned)) {
 				this.nesteFokusertDato = moment(fokusertDato)
-					.add(1, 'months')
+					.add(diff, 'months')
 					.toDate();
 			} else {
 				this.nesteFokusertDato = moment(fokusertDato)
-					.add(-1, 'months')
+					.add(diff, 'months')
 					.toDate();
 			}
 		}
@@ -214,24 +217,14 @@ class Dagvelger extends React.Component<Props, State> {
 		});
 	}
 
-	gåTilNesteMåned(evt: React.KeyboardEvent<any>) {
+	navigerMåneder(evt: React.KeyboardEvent<any>, antall: number) {
 		evt.preventDefault();
-		const mnd = moment(this.state.måned).add(1, 'month');
+		const mnd = moment(this.state.måned).add(antall, 'month'); // const mnd = moment(this.state.måned).add(1, 'month');
 		if (
 			this.props.avgrensninger &&
 			mnd
 				.startOf('month')
-				.isBefore(moment(this.props.avgrensninger.maksDato).endOf('month'))
-		) {
-			this.onByttMåned(mnd.toDate());
-		}
-	}
-
-	gåTilForrigeMåned(evt: React.KeyboardEvent<any>) {
-		evt.preventDefault();
-		const mnd = moment(this.state.måned).add(-1, 'month');
-		if (
-			this.props.avgrensninger &&
+				.isBefore(moment(this.props.avgrensninger.maksDato).endOf('month')) &&
 			mnd
 				.endOf('month')
 				.isAfter(moment(this.props.avgrensninger.minDato).startOf('month'))
@@ -273,13 +266,17 @@ class Dagvelger extends React.Component<Props, State> {
 		this.setState({ erÅpen: !this.state.erÅpen });
 	}
 
-	lukkKalender() {
+	lukkKalender(settFokusPåInput?: boolean) {
 		this.setState({ erÅpen: false });
+		this.setFokusPåInput = settFokusPåInput;
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
 		if (!prevState.erÅpen && this.state.erÅpen && this.daypickerWrapper) {
 			focusOnDayPicker(this.daypickerWrapper);
+		} else if (prevState.erÅpen && !this.state.erÅpen && this.input) {
+			this.setFokusPåInput = false;
+			this.input.focus();
 		}
 		if (
 			prevState.måned !== this.state.måned &&
@@ -361,8 +358,11 @@ class Dagvelger extends React.Component<Props, State> {
 							<KeyboardNavigation
 								onHome={(e) => this.fokuserFørsteDagIMåned(e)}
 								onEnd={(e) => this.fokuserSisteDagIMåned(e)}
-								onPageDown={(e) => this.gåTilNesteMåned(e)}
-								onPageUp={(e) => this.gåTilForrigeMåned(e)}
+								onPageDown={(e) => this.navigerMåneder(e, 1)}
+								onPageUp={(e) => this.navigerMåneder(e, -1)}
+								onAltPageDown={(e) => this.navigerMåneder(e, 12)}
+								onAltPageUp={(e) => this.navigerMåneder(e, -12)}
+								onEscape={() => this.lukkKalender(true)}
 							>
 								<DayPicker
 									renderDay={(d) => (
