@@ -6,6 +6,8 @@
 	"dependencies": {
 		"@types/react": "^16.0.40",
 		"chokidar": "^2.0.2",
+		"focus-trap": "^2.4.3",
+		"focus-trap-react": "^3.1.2",
 		"lodash.isequal": "^4.5.0",
 		"lodash.throttle": "^4.1.1",
 		"moment": "^2.21.0",

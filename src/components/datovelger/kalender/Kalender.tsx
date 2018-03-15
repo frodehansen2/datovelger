@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DayPicker, { DayPickerProps, Modifier } from 'react-day-picker';
 import * as moment from 'moment';
+import * as FocusTrap from 'focus-trap-react';
 import {
 	dagDatoNøkkel,
 	fokuserPåDato,
@@ -150,21 +151,23 @@ export class Kalender extends React.Component<Props, State> {
 					onAltPageUp={(e) => this.navigerMåneder(e, -12)}
 					onEscape={onLukk}
 				>
-					<DayPicker
-						renderDay={(d) => (
-							<span data-date={dagDatoNøkkel(d)} aria-hidden="true">
-								{d.getDate()}
-							</span>
-						)}
-						fromMonth={min}
-						toMonth={maks}
-						month={måned}
-						selectedDays={dato}
-						onDayClick={onVelgDag}
-						onMonthChange={this.onByttMåned}
-						disabledDays={utilgjengeligeDager}
-						{...innstillinger}
-					/>
+					<FocusTrap active={true}>
+						<DayPicker
+							renderDay={(d) => (
+								<span data-date={dagDatoNøkkel(d)} aria-hidden="true">
+									{d.getDate()}
+								</span>
+							)}
+							fromMonth={min}
+							toMonth={maks}
+							month={måned}
+							selectedDays={dato}
+							onDayClick={onVelgDag}
+							onMonthChange={this.onByttMåned}
+							disabledDays={utilgjengeligeDager}
+							{...innstillinger}
+						/>
+					</FocusTrap>
 				</KeyboardNavigation>
 			</div>
 		);
