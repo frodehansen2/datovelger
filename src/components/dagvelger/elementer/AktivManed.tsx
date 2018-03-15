@@ -16,7 +16,7 @@ export class AktivManed extends React.Component<Props, {}> {
 	}
 	render() {
 		return (
-			<div className="DayPicker-Caption" aria-live="assertive" role="header">
+			<div className="DayPicker-Caption" role="presentation">
 				{lagCaption(this.props)}
 			</div>
 		);

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import DayPicker, { DayPickerProps, Modifier } from 'react-day-picker';
 import * as moment from 'moment';
-const momentLocaleUtils = require('react-day-picker/moment');
 import KeyboardNavigation from '../common/KeyboardNavigation';
 import {
 	dagDatoNøkkel,
@@ -11,10 +10,13 @@ import {
 	getFokusertDato,
 	getSammeDatoIMåned,
 	erMånedTilgjengelig,
-	fokuserKalender
+	fokuserKalender,
+	formaterDayAriaLabel
 } from './utils';
 import Navbar from './Navbar';
 import { AktivManed } from './elementer/AktivManed';
+
+const momentLocaleUtils = require('react-day-picker/moment');
 
 export interface Props {
 	måned: Date;
@@ -101,7 +103,8 @@ export class Kalender extends React.Component<Props, State> {
 		const kalender = this.kalender;
 
 		const localeUtils = {
-			...momentLocaleUtils
+			...momentLocaleUtils,
+			formatDay: (d: Date, l: string) => formaterDayAriaLabel(d, l)
 		};
 
 		const innstillinger: DayPickerProps = {

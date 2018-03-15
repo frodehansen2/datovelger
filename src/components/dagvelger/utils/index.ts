@@ -9,6 +9,16 @@ export const formatDateInputValue = (date?: Date) => {
 	return date ? moment(date).format('DD.MM.YYYY') : '';
 };
 
+export const formaterDayAriaLabel = (dato: Date, locale: string) => {
+	return moment(dato).format('DD.MM.YYYY (dddd)');
+	// if (avgrensninger) {
+	// 	if (!erDagTilgjengelig(dato)) {
+	// 		ariaLabel = ` (ikke tilgjengelig)`;
+	// 	}
+	// }
+	// return ariaLabel;
+};
+
 export const dagDatoNøkkel = (dato: Date) =>
 	`${moment(dato).format('DD.MM.YYYY')}`;
 

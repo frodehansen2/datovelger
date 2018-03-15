@@ -1763,6 +1763,11 @@ body .blokk-xl {
 .nav-dagvelger .DayPicker {
   background: #FFF;
 }
+.nav-dagvelger .DayPicker-wrapper:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #FFBD66;
+  border-radius: 3px;
+}
 .nav-dagvelger .DayPicker-Day {
   border-radius: 0;
   border-radius: 0 !important;
