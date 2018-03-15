@@ -6,23 +6,35 @@ export interface Props {
 	erÅpen: boolean;
 }
 
-const KalenderKnapp: React.StatelessComponent<Props> = ({
-	onToggle,
-	erÅpen
-}) => (
-	<button
-		type="button"
-		className="nav-datovelger__kalenderknapp"
-		onClick={(e) => {
-			e.preventDefault();
-			onToggle();
-		}}
-		role="button"
-		aria-label={erÅpen ? 'Kalender' : 'Kalender'}
-		aria-expanded={erÅpen}
-	>
-		<KalenderIkon />
-	</button>
-);
+class KalenderKnapp extends React.Component<Props> {
+	button: HTMLButtonElement | null;
+	constructor(props: Props) {
+		super(props);
+	}
+	focus() {
+		if (this.button) {
+			this.button.focus();
+		}
+	}
+	render() {
+		const { onToggle, erÅpen } = this.props;
 
+		return (
+			<button
+				ref={(c) => (this.button = c)}
+				type="button"
+				className="nav-datovelger__kalenderknapp"
+				onClick={(e) => {
+					e.preventDefault();
+					onToggle();
+				}}
+				role="button"
+				aria-label={erÅpen ? 'Kalender' : 'Kalender'}
+				aria-expanded={erÅpen}
+			>
+				<KalenderIkon />
+			</button>
+		);
+	}
+}
 export default KalenderKnapp;

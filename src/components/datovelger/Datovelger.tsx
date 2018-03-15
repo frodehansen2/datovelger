@@ -78,13 +78,11 @@ const getUtilgjengeligeDager = (
 	];
 };
 class Datovelger extends React.Component<Props, State> {
-	input: Datoinput | null;
 	id: string;
-	setFocusOnCalendar: boolean;
-	daypickerWrapper: HTMLDivElement | null;
-	nesteFokusertDato: Date | undefined;
-	setFokusPåInput: boolean | undefined;
+	input: Datoinput | null;
+	setFokusPåKalenderKnapp: boolean | undefined;
 	kalender: Kalender | null;
+	kalenderKnapp: KalenderKnapp | null;
 
 	constructor(props: Props) {
 		super(props);
@@ -112,7 +110,7 @@ class Datovelger extends React.Component<Props, State> {
 		});
 	}
 
-	onVelgDag(dato: Date) {
+	onVelgDag(dato: Date, lukkKalender?: boolean) {
 		const datovalidering = validerDato(dato, this.props.avgrensninger || {});
 		if (datovalidering === 'gyldig') {
 			this.setState({
@@ -120,13 +118,13 @@ class Datovelger extends React.Component<Props, State> {
 				erÅpen: false,
 				datovalidering
 			});
-			if (this.input) {
-				this.input.focus();
-			}
 			this.props.velgDag(dato);
 		} else if (this.props.ugyldigDagValgt) {
 			this.props.ugyldigDagValgt(dato, datovalidering);
 			this.setState({ datovalidering });
+		}
+		if (lukkKalender) {
+			this.lukkKalender(true);
 		}
 	}
 
@@ -151,15 +149,15 @@ class Datovelger extends React.Component<Props, State> {
 
 	lukkKalender(settFokusPåInput?: boolean) {
 		this.setState({ erÅpen: false });
-		this.setFokusPåInput = settFokusPåInput;
+		this.setFokusPåKalenderKnapp = settFokusPåInput;
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
 		if (!prevState.erÅpen && this.state.erÅpen && this.kalender) {
 			this.kalender.settFokus();
-		} else if (prevState.erÅpen && !this.state.erÅpen && this.input) {
-			this.setFokusPåInput = false;
-			this.input.focus();
+		} else if (prevState.erÅpen && !this.state.erÅpen && this.kalenderKnapp) {
+			this.setFokusPåKalenderKnapp = false;
+			this.kalenderKnapp.focus();
 		}
 	}
 
@@ -178,7 +176,7 @@ class Datovelger extends React.Component<Props, State> {
 			datovalidering !== 'gyldig' && this.props.dato !== undefined;
 
 		return (
-			<DomEventContainer onBlur={() => this.lukkKalender()}>
+			<DomEventContainer>
 				<div className={classnames('nav-datovelger')}>
 					{avgrensninger &&
 						avgrensningerInfoId && (
@@ -200,6 +198,7 @@ class Datovelger extends React.Component<Props, State> {
 							onDateChange={this.onDatoDateChange}
 						/>
 						<KalenderKnapp
+							ref={(c) => (this.kalenderKnapp = c)}
 							onToggle={this.toggleKalender}
 							erÅpen={erÅpen || false}
 						/>
@@ -217,7 +216,7 @@ class Datovelger extends React.Component<Props, State> {
 									? getUtilgjengeligeDager(avgrensninger)
 									: undefined
 							}
-							onVelgDag={this.onVelgDag}
+							onVelgDag={(d) => this.onVelgDag(d, true)}
 							onLukk={() => this.lukkKalender(true)}
 						/>
 					)}
