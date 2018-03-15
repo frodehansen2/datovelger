@@ -1,7 +1,6 @@
 import * as React from 'react';
 import DayPicker, { DayPickerProps, Modifier } from 'react-day-picker';
 import * as moment from 'moment';
-import KeyboardNavigation from '../common/KeyboardNavigation';
 import {
 	dagDatoNøkkel,
 	fokuserFørsteDagIMåned,
@@ -12,9 +11,10 @@ import {
 	erMånedTilgjengelig,
 	fokuserKalender,
 	formaterDayAriaLabel
-} from './utils';
+} from '../utils';
 import Navbar from './Navbar';
-import { AktivManed } from './elementer/AktivManed';
+import { AktivManed } from './AktivManed';
+import KeyboardNavigation from '../../common/KeyboardNavigation';
 
 const momentLocaleUtils = require('react-day-picker/moment');
 

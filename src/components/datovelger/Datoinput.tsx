@@ -25,7 +25,7 @@ const getDateFromString = (value: string) => {
 	return undefined;
 };
 
-export class DatoInput extends React.Component<Props, State> {
+export class Input extends React.Component<Props, State> {
 	input: HTMLInputElement | null;
 
 	constructor(props: Props) {
@@ -90,7 +90,7 @@ export class DatoInput extends React.Component<Props, State> {
 				type="tel"
 				ref={(c) => (this.input = c)}
 				value={this.state.value}
-				className="nav-dagvelger__input"
+				className="nav-datovelger__input"
 				maxLength={10}
 				onChange={this.onChange}
 				onBlur={this.onBlur}
@@ -99,4 +99,4 @@ export class DatoInput extends React.Component<Props, State> {
 		);
 	}
 }
-export default DatoInput;
+export default Input;

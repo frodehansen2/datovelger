@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as moment from 'moment';
 
-import { DatovelgerAvgrensninger } from './components/datovelger/types';
-import { validerDato } from './components/datovelger/datovalidering';
-import Dagvelger from './components/dagvelger/Dagvelger';
+import Datoinput from './components/datovelger/Datovelger';
 
 import './styles/index.css';
+import { DatovelgerAvgrensninger } from './components/datovelger/types';
+import { validerDato } from './components/datovelger/utils/datovalidering';
 
 interface Props {}
 
@@ -79,7 +79,7 @@ class DayPickerDemo extends React.Component<Props, State> {
 						<div className="blokk-s">
 							<label htmlFor="datoinput">Velg dato</label>
 						</div>
-						<Dagvelger
+						<Datoinput
 							id="datoinput"
 							dato={this.state.dato}
 							velgDag={(d: Date) => this.oppdaterDato(d)}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import KalenderIkon from '../../datovelger/KalenderIkon';
+import KalenderIkon from './KalenderIkon';
 
 export interface Props {
 	onToggle: () => void;
@@ -12,7 +12,7 @@ const KalenderKnapp: React.StatelessComponent<Props> = ({
 }) => (
 	<button
 		type="button"
-		className="nav-dagvelger__kalenderknapp"
+		className="nav-datovelger__kalenderknapp"
 		onClick={(e) => {
 			e.preventDefault();
 			onToggle();

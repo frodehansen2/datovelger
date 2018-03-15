@@ -31,10 +31,10 @@ const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
 	return (
 		<button
 			className={classnames(
-				'nav-dagvelger__navbar__knapp',
-				`nav-dagvelger__navbar__knapp--${retning}`,
+				'nav-datovelger__navbar__knapp',
+				`nav-datovelger__navbar__knapp--${retning}`,
 				{
-					'nav-dagvelger__navbar__knapp--disabled': disabled
+					'nav-datovelger__navbar__knapp--disabled': disabled
 				}
 			)}
 			type="button"
@@ -72,7 +72,7 @@ const Navbar: React.StatelessComponent<Props> = ({
 
 	return (
 		<div
-			className="nav-dagvelger__navbar"
+			className="nav-datovelger__navbar"
 			role="presentation"
 			aria-hidden="true"
 		>

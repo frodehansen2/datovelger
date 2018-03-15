@@ -1,11 +1,16 @@
-@import '../../../node_modules/react-dates/lib/css/_datepicker.css';
 @import '_variabler.less';
 @import '_mixins.less';
-@import '_react-dates-overrides.less';
+@import '_dayPicker-overrides.less';
 
 .nav-datovelger {
-	position: relative;
-	&__kalenderikon {
+	@input-width: 11rem;
+	&__inputContainer {
+		display: inline-block;
+		width: @input-width;
+		position: relative;
+	}
+	&__kalenderknapp {
+		.knappbase-mixin(inherit);
 		@borderRadius: 0 4px 4px 0;
 		background-color: @white;
 		border: 1px solid #0067c5;
@@ -27,19 +32,50 @@
 			outline: none;
 		}
 	}
-	&--medKalenderikon {
-		width: 11rem;
-		.DateInput {
-			width: 11rem;
-		}
-		.DateInput_input {
-			padding-right: 3rem;
+	&__caption {
+		padding: 0 2rem;
+		text-align: center;
+		text-transform: capitalize;
+		font-size: 2rem;
+	}
+	&__input {
+		.inputStyling();
+		width: 100%;
+		padding-right: 3rem;
+		height: @inputHeight;
+	}
+	&__navbar {
+		position: absolute;
+		left: 0.6rem;
+		right: 0.6rem;
+		top: 0.6rem;
+		&__knapp {
+			.knappbase-mixin(inherit);
+			position: absolute;
+			border: none;
+			padding-left: 0.3rem;
+			padding-right: 0.3rem;
+			margin-top: 1px;
+			&[disabled] {
+				cursor: default;
+				opacity: 0;
+			}
+			&:not([disabled]) {
+				&:hover {
+					.hoverOutline();
+				}
+				&:focus,
+				&:active {
+					.focusOutline();
+				}
+			}
+			&--forrige {
+				left: 0;
+			}
+			&--neste {
+				right: 0;
+			}
 		}
 	}
-	/** Justering på grunn av at chevron ikke sentreres vertikalt */
-	&__chevron {
-		display: inline-block;
-		margin-top: -1px;
-		margin-bottom: 1px;
-	}
+	.DayPicker();
 }
