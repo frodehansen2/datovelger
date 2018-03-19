@@ -3,8 +3,8 @@ import { LocaleUtils } from 'react-day-picker/types/utils';
 
 interface Props {
 	date: Date;
-	localeUtils: LocaleUtils;
 	locale: string;
+	localeUtils: LocaleUtils;
 }
 
 const lagCaption = (props: Props) =>

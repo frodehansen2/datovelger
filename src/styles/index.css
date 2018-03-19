@@ -1538,9 +1538,6 @@ body .blokk-xl {
 .nav-datovelger .DayPicker-Weekday {
   text-transform: capitalize;
 }
-.nav-datovelger .DayPicker-Weekday:after {
-  content: '.';
-}
 .nav-datovelger .DayPicker-Caption {
   padding: 0 2rem;
   text-align: center;

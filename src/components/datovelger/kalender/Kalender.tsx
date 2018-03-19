@@ -15,6 +15,7 @@ import Navbar from './Navbar';
 import KeyboardNavigation from '../../common/KeyboardNavigation';
 import { TittelOgNavigasjon } from './TittelOgNavigasjon';
 
+import 'moment/locale/nb';
 const momentLocaleUtils = require('react-day-picker/moment');
 
 export interface Props {
@@ -92,7 +93,7 @@ export class Kalender extends React.Component<Props, State> {
 			dato,
 			min,
 			maks,
-			locale = 'no',
+			locale = 'nb',
 			onVelgDag,
 			onLukk,
 			visUkenumre,
@@ -102,7 +103,10 @@ export class Kalender extends React.Component<Props, State> {
 
 		const localeUtils = {
 			...momentLocaleUtils,
-			formatDay: (d: Date, l: string) => formaterDayAriaLabel(d, l)
+			formatDay: (d: Date, l: string) => formaterDayAriaLabel(d, l),
+			formatMonthTitle: (d: Date) => moment(d).format('MMMM YYYY'),
+			formatWeekdayLong: (day: number) => moment.weekdays(day),
+			formatWeekdayShort: (day: number) => moment.weekdaysShort(day)
 		};
 
 		const innstillinger: DayPickerProps = {
@@ -136,6 +140,8 @@ export class Kalender extends React.Component<Props, State> {
 						focusTrapOptions={{ clickOutsideDeactivates: true }}
 					>
 						<DayPicker
+							locale={locale}
+							localeUtils={localeUtils}
 							renderDay={(d) => (
 								<span data-date={dagDatoNøkkel(d)} aria-hidden="true">
 									{d.getDate()}

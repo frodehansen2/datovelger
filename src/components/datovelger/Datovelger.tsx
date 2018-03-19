@@ -44,7 +44,7 @@ export interface Props {
 	/** Kalles når en ikke lovlig dato velges */
 	ugyldigDagValgt?: (date: Date, validering?: DatoValidering) => void;
 	/** Språk - default no */
-	locale?: 'no';
+	locale?: 'nb';
 	/** Om ukenumre skal vises - default false */
 	visUkenumre?: boolean;
 }
