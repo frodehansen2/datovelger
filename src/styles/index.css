@@ -1518,19 +1518,19 @@ body .blokk-xl {
   color: #FFF;
   background-color: #0067C5 !important;
 }
-.nav-datovelger .DayPicker-Day--selected.DayPicker-Day--disabled {
-  color: #0067C5 !important;
-  font-weight: normal;
-}
 .nav-datovelger .DayPicker-Day--disabled {
   color: #B7B1A9;
   background-color: #f6f6f6;
+  font-weight: normal !important;
 }
 .nav-datovelger .DayPicker-Day--outside {
   background-color: transparent;
 }
 .nav-datovelger .DayPicker-Day--today {
   color: #0067C5;
+}
+.nav-datovelger .DayPicker-Day--today.DayPicker-Day--disabled {
+  color: #66a4dc;
 }
 .nav-datovelger .DayPicker-Day:last-child {
   color: #e79999 !important;

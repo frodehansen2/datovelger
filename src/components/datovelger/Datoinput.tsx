@@ -86,7 +86,7 @@ export class Input extends React.Component<Props, State> {
 				{...inputProps}
 				autoComplete="off"
 				autoCorrect="off"
-				pattern="dd.dd.dddd"
+				pattern="\d{2}.\d{2}.\d{4}"
 				type="tel"
 				ref={(c) => (this.input = c)}
 				value={this.state.value}
