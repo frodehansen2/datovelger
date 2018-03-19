@@ -9,13 +9,11 @@ import {
 	getSammeDatoIMåned,
 	erMånedTilgjengelig,
 	fokuserKalender,
-	formaterDayAriaLabel,
-	fokuserFørsteDagIUke,
-	fokuserSisteDagIUke
+	formaterDayAriaLabel
 } from '../utils';
 import Navbar from './Navbar';
-import { AktivManed } from './AktivManed';
 import KeyboardNavigation from '../../common/KeyboardNavigation';
+import { TittelOgNavigasjon } from './TittelOgNavigasjon';
 
 const momentLocaleUtils = require('react-day-picker/moment');
 
@@ -110,47 +108,29 @@ export class Kalender extends React.Component<Props, State> {
 		const innstillinger: DayPickerProps = {
 			locale,
 			localeUtils,
-			navbarElement: (
-				<Navbar
-					måned={måned}
-					byttMåned={(d: Date) => this.onByttMåned(d)}
-					min={min}
-					maks={maks}
-				/>
-			),
+			navbarElement: <span />,
 			captionElement: (
-				<AktivManed date={måned} locale={locale} localeUtils={localeUtils} />
+				<TittelOgNavigasjon
+					date={måned}
+					locale={locale}
+					localeUtils={localeUtils}
+					navbar={
+						<Navbar
+							måned={måned}
+							byttMåned={(d: Date) => this.onByttMåned(d)}
+							min={min}
+							maks={maks}
+						/>
+					}
+				/>
 			),
 			firstDayOfWeek: 1,
 			showWeekNumbers: visUkenumre
 		};
 
 		return (
-			<div
-				ref={(c) => (this.kalender = c)}
-				role="dialog"
-				aria-label="Kalender"
-				data-helptext="Press the arrow keys to navigate by day, PageUp and PageDown to navigate by month, Alt+PageUp and Alt+PageDown to navigate by year, or Escape to cancel."
-			>
-				<KeyboardNavigation
-					onHome={(e) => {
-						const d = getFokusertDato(this.kalender);
-						if (d) {
-							fokuserFørsteDagIUke(this.kalender, d, e);
-						}
-					}}
-					onEnd={(e) => {
-						const d = getFokusertDato(this.kalender);
-						if (d) {
-							fokuserSisteDagIUke(this.kalender, d, e);
-						}
-					}}
-					onPageDown={(e) => this.navigerMåneder(e, 1)}
-					onPageUp={(e) => this.navigerMåneder(e, -1)}
-					onAltPageDown={(e) => this.navigerMåneder(e, 12)}
-					onAltPageUp={(e) => this.navigerMåneder(e, -12)}
-					onEscape={onLukk}
-				>
+			<div ref={(c) => (this.kalender = c)} role="dialog" aria-label="Kalender">
+				<KeyboardNavigation onEscape={onLukk}>
 					<FocusTrap active={true}>
 						<DayPicker
 							renderDay={(d) => (
@@ -161,6 +141,7 @@ export class Kalender extends React.Component<Props, State> {
 							fromMonth={min}
 							toMonth={maks}
 							month={måned}
+							canChangeMonth={false}
 							selectedDays={dato}
 							onDayClick={onVelgDag}
 							onMonthChange={this.onByttMåned}

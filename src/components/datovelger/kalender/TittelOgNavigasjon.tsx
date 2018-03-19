@@ -5,25 +5,24 @@ interface Props {
 	date: Date;
 	localeUtils: LocaleUtils;
 	locale: string;
+	navbar?: React.ReactNode;
 }
 
 const lagCaption = (props: Props) =>
 	props.localeUtils.formatMonthTitle(props.date, props.locale);
 
-export class AktivManed extends React.Component<Props, {}> {
+export class TittelOgNavigasjon extends React.Component<Props, {}> {
 	shouldComponentUpdate(nextProps: any) {
 		return lagCaption(nextProps) !== lagCaption(this.props);
 	}
 	render() {
 		return (
-			<div className="DayPicker-Caption" role="presentation">
-				{lagCaption(this.props)}
-				<div>
-					<button>sdf</button>
-				</div>
+			<div className="DayPicker-Caption">
+				<span aria-live="assertive">{lagCaption(this.props)}</span>
+				{this.props.navbar && this.props.navbar}
 			</div>
 		);
 	}
 }
 
-export default AktivManed;
+export default TittelOgNavigasjon;

@@ -72,34 +72,31 @@ class DayPickerDemo extends React.Component<Props, State> {
 		const valgtDato = dato ? dato.toDateString() : 'ingen gyldig dato valgt';
 
 		return (
-			<fieldset>
-				<legend>Datovelger 1: DayPicker</legend>
-				<form action="#" onSubmit={this.handleSubmit}>
-					<div className="datovelger">
-						<div className="blokk-s">
-							<label htmlFor="datoinput">Velg dato</label>
-						</div>
-						<Datoinput
-							id="datoinput"
-							dato={this.state.dato}
-							velgDag={(d: Date) => this.oppdaterDato(d)}
-							avgrensninger={this.state.avgrensninger}
-							inputProps={{
-								placeholder: 'dd.mm.åååå'
-							}}
-							ugyldigDagValgt={(d, validering) => {
-								this.oppdaterDato(d);
-							}}
-						/>
-						<hr />
+			<form action="#" onSubmit={this.handleSubmit}>
+				<div className="datovelger">
+					<div className="blokk-s">
+						<label htmlFor="datoinput">Velg dato</label>
 					</div>
-					<p>Valgt dato: {valgtDato}</p>
-					<p>Validering: {this.state.error}</p>
-					<button type="submit" className="okButton">
-						Ok
-					</button>
-				</form>
-			</fieldset>
+					<Datoinput
+						id="datoinput"
+						dato={this.state.dato}
+						velgDag={(d: Date) => this.oppdaterDato(d)}
+						avgrensninger={this.state.avgrensninger}
+						inputProps={{
+							placeholder: 'dd.mm.åååå'
+						}}
+						ugyldigDagValgt={(d, validering) => {
+							this.oppdaterDato(d);
+						}}
+					/>
+					<hr />
+				</div>
+				<p>Valgt dato: {valgtDato}</p>
+				<p>Validering: {this.state.error}</p>
+				<button type="submit" className="okButton">
+					Ok
+				</button>
+			</form>
 		);
 	}
 }

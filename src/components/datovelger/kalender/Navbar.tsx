@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import * as classnames from 'classnames';
 import Chevron from 'nav-frontend-chevron';
 
-interface Props {
+export interface Props {
 	måned: Date;
 	byttMåned: (month: Date) => void;
 	byttÅr?: (month: Date) => void;
@@ -16,19 +16,15 @@ interface NavbarKnappProps {
 	retning: 'forrige' | 'neste';
 	disabled: boolean;
 	onClick: (evt: React.MouseEvent<HTMLButtonElement>, måned: Date) => void;
-	accessKey?: string;
 }
-
-const formatMåned = (måned: Date) => moment(måned).format('MMMM');
 
 const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
 	måned,
 	retning,
 	disabled,
-	onClick,
-	accessKey
+	onClick
 }) => {
-	const label = `Bytt til ${formatMåned(måned)}`;
+	const label = retning === 'forrige' ? 'Forrige måned' : 'Neste måned';
 
 	return (
 		<button
@@ -44,7 +40,6 @@ const NavbarKnapp: React.StatelessComponent<NavbarKnappProps> = ({
 			aria-label={label}
 			aria-disabled={disabled}
 			role="button"
-			accessKey={accessKey}
 		>
 			<Chevron type={retning === 'forrige' ? 'venstre' : 'høyre'} />
 		</button>
@@ -75,24 +70,18 @@ const Navbar: React.StatelessComponent<Props> = ({
 	};
 
 	return (
-		<div
-			className="nav-datovelger__navbar"
-			role="presentation"
-			aria-hidden="true"
-		>
+		<div className="nav-datovelger__navbar" role="nav">
 			<NavbarKnapp
 				måned={forrigeMåned.toDate()}
 				retning="forrige"
 				disabled={forrigeErDisabled}
 				onClick={onClick}
-				accessKey="1"
 			/>
 			<NavbarKnapp
 				måned={nesteMåned.toDate()}
 				retning="neste"
 				disabled={nesteErDisabled}
 				onClick={onClick}
-				accessKey="2"
 			/>
 		</div>
 	);

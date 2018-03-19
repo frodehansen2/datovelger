@@ -10,7 +10,7 @@ export const formatDateInputValue = (date?: Date) => {
 };
 
 export const formaterDayAriaLabel = (dato: Date, locale: string) => {
-	return moment(dato).format('DD.MM.YYYY (dddd)');
+	return moment(dato).format('DD.MM.YYYY, dddd');
 };
 
 export const dagDatoNøkkel = (dato: Date) =>
