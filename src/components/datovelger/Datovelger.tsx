@@ -144,18 +144,24 @@ class Datovelger extends React.Component<Props, State> {
 	}
 
 	toggleKalender() {
+		this.setFokusPåKalenderKnapp = true;
 		this.setState({ erÅpen: !this.state.erÅpen });
 	}
 
-	lukkKalender(settFokusPåInput?: boolean) {
+	lukkKalender(settFokusPåKalenderknapp?: boolean) {
 		this.setState({ erÅpen: false });
-		this.setFokusPåKalenderKnapp = settFokusPåInput;
+		this.setFokusPåKalenderKnapp = settFokusPåKalenderknapp;
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
 		if (!prevState.erÅpen && this.state.erÅpen && this.kalender) {
 			this.kalender.settFokus();
-		} else if (prevState.erÅpen && !this.state.erÅpen && this.kalenderKnapp) {
+		} else if (
+			prevState.erÅpen &&
+			!this.state.erÅpen &&
+			this.setFokusPåKalenderKnapp &&
+			this.kalenderKnapp
+		) {
 			this.setFokusPåKalenderKnapp = false;
 			this.kalenderKnapp.focus();
 		}
@@ -199,7 +205,7 @@ class Datovelger extends React.Component<Props, State> {
 						/>
 						<KalenderKnapp
 							ref={(c) => (this.kalenderKnapp = c)}
-							onToggle={this.toggleKalender}
+							onClick={this.toggleKalender}
 							erÅpen={erÅpen || false}
 						/>
 					</div>

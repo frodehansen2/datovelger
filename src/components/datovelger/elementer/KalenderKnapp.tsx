@@ -2,7 +2,7 @@ import * as React from 'react';
 import KalenderIkon from './KalenderIkon';
 
 export interface Props {
-	onToggle: () => void;
+	onClick: () => void;
 	erÅpen: boolean;
 }
 
@@ -17,7 +17,7 @@ class KalenderKnapp extends React.Component<Props> {
 		}
 	}
 	render() {
-		const { onToggle, erÅpen } = this.props;
+		const { onClick, erÅpen } = this.props;
 
 		return (
 			<button
@@ -26,7 +26,7 @@ class KalenderKnapp extends React.Component<Props> {
 				className="nav-datovelger__kalenderknapp"
 				onClick={(e) => {
 					e.preventDefault();
-					onToggle();
+					onClick();
 				}}
 				role="button"
 				aria-label={erÅpen ? 'Kalender' : 'Kalender'}

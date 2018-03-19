@@ -87,7 +87,7 @@ export class Input extends React.Component<Props, State> {
 				autoComplete="off"
 				autoCorrect="off"
 				pattern="\d{2}.\d{2}.\d{4}"
-				type="tel"
+				type="text"
 				ref={(c) => (this.input = c)}
 				value={this.state.value}
 				className="nav-datovelger__input"

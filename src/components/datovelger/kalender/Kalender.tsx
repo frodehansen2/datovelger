@@ -131,7 +131,10 @@ export class Kalender extends React.Component<Props, State> {
 		return (
 			<div ref={(c) => (this.kalender = c)} role="dialog" aria-label="Kalender">
 				<KeyboardNavigation onEscape={onLukk}>
-					<FocusTrap active={true}>
+					<FocusTrap
+						active={true}
+						focusTrapOptions={{ clickOutsideDeactivates: true }}
+					>
 						<DayPicker
 							renderDay={(d) => (
 								<span data-date={dagDatoNøkkel(d)} aria-hidden="true">
