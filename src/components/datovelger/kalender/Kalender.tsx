@@ -8,22 +8,21 @@ import {
 	getFokusertDato,
 	getSammeDatoIMåned,
 	erMånedTilgjengelig,
-	fokuserKalender,
-	formaterDayAriaLabel
+	fokuserKalender
 } from '../utils';
 import Navbar from './Navbar';
 import KeyboardNavigation from '../../common/KeyboardNavigation';
 import { TittelOgNavigasjon } from './TittelOgNavigasjon';
-
-import 'moment/locale/nb';
-const momentLocaleUtils = require('react-day-picker/moment');
+import kalenderLocaleUtils from './localeUtils';
+import { LocaleUtils } from 'react-day-picker/types/utils';
 
 export interface Props {
 	måned: Date;
 	dato?: Date;
-	locale?: string;
+	locale: string;
 	min?: Date;
 	maks?: Date;
+	localeUtils?: LocaleUtils;
 	onVelgDag: (dato: Date) => void;
 	onLukk: () => void;
 	utilgjengeligeDager?: Modifier[];
@@ -93,7 +92,7 @@ export class Kalender extends React.Component<Props, State> {
 			dato,
 			min,
 			maks,
-			locale = 'nb',
+			locale,
 			onVelgDag,
 			onLukk,
 			visUkenumre,
@@ -102,11 +101,8 @@ export class Kalender extends React.Component<Props, State> {
 		const { måned } = this.state;
 
 		const localeUtils = {
-			...momentLocaleUtils,
-			formatDay: (d: Date, l: string) => formaterDayAriaLabel(d, l),
-			formatMonthTitle: (d: Date) => moment(d).format('MMMM YYYY'),
-			formatWeekdayLong: (day: number) => moment.weekdays(day),
-			formatWeekdayShort: (day: number) => moment.weekdaysShort(day)
+			...kalenderLocaleUtils,
+			...this.props.localeUtils
 		};
 
 		const innstillinger: DayPickerProps = {

@@ -173,6 +173,7 @@ class Datovelger extends React.Component<Props, State> {
 			id,
 			inputProps,
 			avgrensninger,
+			locale = 'nb',
 			...kalenderProps
 		} = this.props;
 
@@ -213,6 +214,7 @@ class Datovelger extends React.Component<Props, State> {
 						<Kalender
 							ref={(c) => (this.kalender = c)}
 							{...kalenderProps}
+							locale={locale}
 							dato={dato}
 							måned={dato || new Date()}
 							min={avgrensninger && avgrensninger.minDato}

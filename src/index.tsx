@@ -1,7 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
+
 import 'moment/locale/nb';
+import 'moment/locale/nn';
+
 import { Router } from 'react-router';
 import { createHashHistory } from 'history';
 
