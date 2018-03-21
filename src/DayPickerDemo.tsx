@@ -79,13 +79,13 @@ class DayPickerDemo extends React.Component<Props, State> {
 					</div>
 					<Datoinput
 						id="datoinput"
-						dato={this.state.dato}
-						velgDag={(d: Date) => this.oppdaterDato(d)}
+						valgtDato={this.state.dato}
+						onVelgDag={(d: Date) => this.oppdaterDato(d)}
 						avgrensninger={this.state.avgrensninger}
 						inputProps={{
 							placeholder: 'dd.mm.åååå'
 						}}
-						ugyldigDagValgt={(d, validering) => {
+						onUgyldigDagValgt={(d, validering) => {
 							this.oppdaterDato(d);
 						}}
 					/>

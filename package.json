@@ -31,8 +31,10 @@
 		"test": "react-scripts-ts test --env=jsdom",
 		"eject": "react-scripts-ts eject",
 		"build-css": "node-less-chokidar src/styles/index.less -o src/",
-		"watch-css": "chokidar \"src/**/*.less\" -c \"node-less-chokidar ./src/styles/index.less\"",
-		"watch-css-old": "npm run build-css && node-less-chokidar src/ -o src/ --watch --recursive",
+		"watch-css":
+			"chokidar \"src/**/*.less\" -c \"node-less-chokidar ./src/styles/index.less\"",
+		"watch-css-old":
+			"npm run build-css && node-less-chokidar src/ -o src/ --watch --recursive",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build"
 	},
