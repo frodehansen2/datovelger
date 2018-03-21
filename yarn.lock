@@ -5055,7 +5055,7 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     strip-json-comments "~2.0.1"
 
 "react-day-picker@file:../react-day-picker":
-  version "7.1.9"
+  version "7.1.4"
   dependencies:
     prop-types "^15.6.1"
 

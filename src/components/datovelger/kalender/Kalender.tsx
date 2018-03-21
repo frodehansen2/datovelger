@@ -152,6 +152,17 @@ export class Kalender extends React.Component<Props, State> {
 							onMonthChange={this.onByttMåned}
 							disabledDays={utilgjengeligeDager}
 							{...innstillinger}
+							roles={{
+								day: 'link',
+								weeknumber: 'link',
+								caption: 'heading',
+								month: 'application',
+								body: 'presentation',
+								week: 'presentation',
+								weekday: 'presentation',
+								weekdays: 'presentation',
+								weekdaysRow: 'presentation'
+							}}
 						/>
 					</FocusTrap>
 				</KeyboardNavigation>
