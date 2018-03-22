@@ -26,6 +26,7 @@ export interface Props {
 	onLukk: () => void;
 	utilgjengeligeDager?: Modifier[];
 	visUkenumre?: boolean;
+	dayPickerProps?: DayPickerProps;
 }
 
 interface State {
@@ -95,7 +96,8 @@ export class Kalender extends React.Component<Props, State> {
 			onVelgDag,
 			onLukk,
 			visUkenumre,
-			utilgjengeligeDager
+			utilgjengeligeDager,
+			dayPickerProps
 		} = this.props;
 		const { måned } = this.state;
 
@@ -146,6 +148,7 @@ export class Kalender extends React.Component<Props, State> {
 							onMonthChange={this.onByttMåned}
 							disabledDays={utilgjengeligeDager}
 							{...innstillinger}
+							{...dayPickerProps}
 							roles={{
 								day: 'link',
 								disabledDay: 'presentation',
