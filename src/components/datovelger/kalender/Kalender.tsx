@@ -3,7 +3,6 @@ import DayPicker, { DayPickerProps, Modifier } from 'react-day-picker';
 import * as moment from 'moment';
 import * as FocusTrap from 'focus-trap-react';
 import {
-	dagDatoNøkkel,
 	fokuserPåDato,
 	getFokusertDato,
 	getSammeDatoIMåned,
@@ -138,11 +137,6 @@ export class Kalender extends React.Component<Props, State> {
 						<DayPicker
 							locale={locale}
 							localeUtils={localeUtils}
-							renderDay={(d) => (
-								<span data-date={dagDatoNøkkel(d)} aria-hidden="true">
-									{d.getDate()}
-								</span>
-							)}
 							fromMonth={min}
 							toMonth={maks}
 							month={måned}
@@ -154,6 +148,7 @@ export class Kalender extends React.Component<Props, State> {
 							{...innstillinger}
 							roles={{
 								day: 'link',
+								disabledDay: 'presentation',
 								weeknumber: 'link',
 								caption: 'heading',
 								month: 'application',
