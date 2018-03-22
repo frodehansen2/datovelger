@@ -16,7 +16,7 @@
 		"nav-frontend-js-utils": "^1.0.3",
 		"nav-frontend-typografi": "^2.0.2",
 		"react": "^16.2.0",
-		"react-day-picker": "file:../react-day-picker",
+		"react-day-picker": "git+ssh://git@github.com:frodehansen2/react-day-picker.git",
 		"react-dom": "^16.2.0",
 		"react-router": "^4.2.0",
 		"react-router-dom": "^4.2.2",

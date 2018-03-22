@@ -5054,8 +5054,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-"react-day-picker@file:../react-day-picker":
+"react-day-picker@git+ssh://git@github.com:frodehansen2/react-day-picker.git":
   version "7.1.4"
+  resolved "git+ssh://git@github.com:frodehansen2/react-day-picker.git#e78bcc74206c21d7a649222c471eefe77143c581"
   dependencies:
     prop-types "^15.6.1"
 
